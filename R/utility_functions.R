@@ -568,10 +568,13 @@ reset_factor_levels <- function( data ){
 #' ## Generate example data.frame of factors with factor levels of numeric,
 #' ## character and mixed data types.
 #' N <- 20
-#' ex1 <- data.frame( factor( sample( c(0,1,NA), size = N, prob = c(0.4,0.3,0.3), replace = TRUE ) )  )
+#' ex1 <- data.frame( factor( sample( c(0,1,NA), size = N, prob = c(0.4,0.3,0.3),
+#'                            replace = TRUE ) )  )
 #' names( ex1 ) <- "num"
-#' ex1$char <- factor( sample( c("Control","Experimental", NA ), size = N, prob = c(0.4,0.3,0.3), replace = TRUE ) )
-#' ex1$mixed <- factor( sample( c(10,'A',NA), size = N, prob = c(0.4,0.3,0.3), replace = TRUE ) )
+#' ex1$char <- factor( sample( c("Control","Experimental", NA ), size = N,
+#'                     prob = c(0.4,0.3,0.3), replace = TRUE ) )
+#' ex1$mixed <- factor( sample( c(10,'A',NA), size = N, prob = c(0.4,0.3,0.3),
+#'                      replace = TRUE ) )
 #' 
 #' ## Initially the data type of all variables in ex1 is factor
 #' ex1

@@ -130,7 +130,8 @@ permute_response_and_treatment <- function( response, trt ){
 #' 
 #' ## Permute a survival response for treatment arm only
 #' ex5 <- x[,c("time","event","trt")]
-#' permuted5 <- permutation( response = ex5[,c("time","event")], trt = ex5$trt, permute_arm = "Experimental" )
+#' permuted5 <- permutation( response = ex5[,c("time","event")], trt = ex5$trt,
+#'                           permute_arm = "Experimental" )
 #' names( permuted5 ) <- paste( "permuted_", names(permuted5), sep = "" )
 #' ex5 <- cbind( ex5, permuted5 )
 #' 

@@ -108,7 +108,8 @@ get_generic_subgroup <- function( subgroup, anon = "xxxxx" ){
 #' suggested_cutoff <- as.character( ex1@superior_subgroups$Suggested_Cutoff[2] )
 #'
 #' ## Get the suggested subgroup
-#' get_suggested_subgroup( anonymized_subgroup = anonymized_subgroup, suggested_cutoff = suggested_cutoff )
+#' get_suggested_subgroup( anonymized_subgroup = anonymized_subgroup,
+#'                         suggested_cutoff = suggested_cutoff )
 #' @export
 get_suggested_subgroup <- function( anonymized_subgroup, suggested_cutoff, anon = "xxxxx" ){
 
@@ -993,7 +994,8 @@ get_covariates <- function( data,
 #' set.seed(0)
 #' N <- 200
 #' continuous_response = runif( min = 0, max = 20, n = N )
-#' trt <- sample( c('Control','Experimental'), size = N, prob = c(0.4,0.6), replace = TRUE )
+#' trt <- sample( c('Control','Experimental'), size = N, prob = c(0.4,0.6),
+#'                replace = TRUE )
 #' X1 <- runif( N, min = 0, max = 1 )
 #' X2 <- runif( N, min = 0, max = 1 )
 #' X3 <- sample( c(0,1), size = N, prob = c(0.2,0.8), replace = TRUE )
@@ -1021,15 +1023,18 @@ get_covariates <- function( data,
 #' distribution( ex1, statistic = 'Inbag_Subgroup_Size' )
 #' 
 #' ## Get the vector of subgroup sample sizes for a particular subgroup
-#' distribution( ex1, statistic = 'Inbag_Subgroup_Size', subgroup = 'X1<xxxxx & X1>=xxxxx' )
+#' distribution( ex1, statistic = 'Inbag_Subgroup_Size',
+#'               subgroup = 'X1<xxxxx & X1>=xxxxx' )
 #' 
 #' ## Get the observed cutpoints for the numeric splitting variables in a subgroup
 #' distribution( ex1, statistic = 'Cutpoints', subgroup = 'X1<xxxxx & X1>=xxxxx' )
 #' 
 #' ## If the subgroup definition has more than one numeric splitting variable you
 #' ## can retrieve the numeric cutpoints for the splitting variables individually
-#' distribution( ex1, statistic = 'Cutpoints', subgroup = 'X1<xxxxx & X1>=xxxxx', subsub = 'X1<xxxxx' )
-#' distribution( ex1, statistic = 'Cutpoints', subgroup = 'X1<xxxxx & X1>=xxxxx', subsub = 'X1>=xxxxx' )
+#' distribution( ex1, statistic = 'Cutpoints', subgroup = 'X1<xxxxx & X1>=xxxxx',
+#'               subsub = 'X1<xxxxx' )
+#' distribution( ex1, statistic = 'Cutpoints', subgroup = 'X1<xxxxx & X1>=xxxxx',
+#'               subsub = 'X1>=xxxxx' )
 #' 
 #' ## Valid statistic names come from the column names in the summary output. If
 #' ## you are uncertain what the possible statistic values could be, you can pass

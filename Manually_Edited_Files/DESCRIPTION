@@ -5,7 +5,7 @@ Version: 0.1.0
 Date: 2018-09-12
 Author: Chakib Battioui, Brian Denton
 Maintainer: Brian Denton <denton_brian_david@lilly.com>
-Description: This package implements a method for identifying subgroups with
+Description: Implements a method for identifying subgroups with
              superior response relative to the overall sample.
 Imports: methods, mlbench, hash, party, rpart, survival, survRM2, stats
 Suggests: parallel

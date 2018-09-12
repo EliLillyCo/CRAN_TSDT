@@ -38,15 +38,19 @@ scoring_function_wrapper <- function( scoring_function_name, data, scoring_funct
 #'                    trt = character(N) )
 #' 
 #' data$continuous_response <- runif( min = 0, max = 20, n = N )
-#' data$trt <- sample( c('Control','Experimental'), size = N, prob = c(0.4,0.6), replace = TRUE )
+#' data$trt <- sample( c('Control','Experimental'), size = N, prob = c(0.4,0.6),
+#'                     replace = TRUE )
 #' 
 #' ## Compute mean response for all data
 #' mean_response( data )
 #' mean( data$continuous_response ) # Function return value should match this value
 #' 
 #' ## Compute mean response for Experimental treatment arm only
-#' mean_response( data, scoring_function_parameters = list( trt_arm = 'Experimental' ) )
-#' mean( data$continuous_response[ data$trt == 'Experimental' ] ) # Function return value should match this value
+#' mean_response( data,
+#'                scoring_function_parameters = list( trt_arm = 'Experimental' ) )
+#' 
+#' # Function return value should match this value
+#' mean( data$continuous_response[ data$trt == 'Experimental' ] )
 #' @export
 mean_response <- function( data,
                            scoring_function_parameters = NULL ){
@@ -92,7 +96,8 @@ mean_response <- function( data,
 #' y = runif( min = 0, max = 20, n = N )
 #' df <- as.data.frame( y )
 #' names( df )  <- "y"
-#' df$trt <- sample( c('Control','Experimental'), size = N, prob = c(0.4,0.6), replace = TRUE )
+#' df$trt <- sample( c('Control','Experimental'), size = N, prob = c(0.4,0.6),
+#'                   replace = TRUE )
 #' 
 #' ## Default behavior is to return the median
 #' quantile_response( df )
@@ -147,19 +152,26 @@ quantile_response <- function( data,
 #' y = runif( min = 0, max = 20, n = N )
 #' df <- as.data.frame( y )
 #' names( df )  <- "y"
-#' df$trt <- sample( c('Control','Experimental'), size = N, prob = c(0.4,0.6), replace = TRUE )
+#' df$trt <- sample( c('Control','Experimental'), size = N, prob = c(0.4,0.6),
+#'                   replace = TRUE )
 #' 
 #' ## Default behavior is to return the median
 #' diff_quantile_response( df )
-#' median( df$y[df$trt!='Control'] ) - median( df$y[df$trt=='Control'] ) # should match previous result from quantile_response
+#' 
+#' # should match previous result from quantile_response
+#' median( df$y[df$trt!='Control'] ) - median( df$y[df$trt=='Control'] )
 #' 
 #' ## Get Q1 response
 #' diff_quantile_response( df, scoring_function_parameters = list( percentile = 0.25 ) )
-#' quantile( df$y[df$trt!='Control'], 0.25 ) - quantile( df$y[df$trt=='Control'], 0.25 ) # should match previous result from quantile_response
+#'
+#' # should match previous result from quantile_response
+#' quantile( df$y[df$trt!='Control'], 0.25 ) - quantile( df$y[df$trt=='Control'], 0.25 )
 #' 
 #' ## Get max response
 #' diff_quantile_response( df, scoring_function_parameters = list( percentile = 1 ) )
-#' max( df$y[df$trt!='Control'] ) -  max( df$y[df$trt=='Control'] ) # should match previous result from quantile_response
+#'
+#' # should match previous result from quantile_response
+#' max( df$y[df$trt!='Control'] ) -  max( df$y[df$trt=='Control'] )
 #' @export
 diff_quantile_response <- function( data,
                                    scoring_function_parameters = NULL ){
@@ -206,7 +218,9 @@ diff_quantile_response <- function( data,
 #' 
 #' # Compute the treatment effect
 #' treatment_effect( df, list( y_var = 'continuous_response', trt_control = 0 ) )
-#' mean( df$continuous_response[df$trt == 1] ) - mean( df$continuous_response[df$trt == 0] ) # Function return value should match this value
+#' 
+#' # Function return value should match this value
+#' mean( df$continuous_response[df$trt == 1] ) - mean( df$continuous_response[df$trt == 0] )
 #' @export
 treatment_effect <- function( data,
                               scoring_function_parameters = NULL ){
@@ -261,7 +275,8 @@ treatment_effect <- function( data,
 #' 
 #' ## Compute desirable response proportion for Experimental treatment arm only
 #' ## with decreasing desirable response (i.e. smaller response value is better).
-#' desirable_response_proportion( data, list( trt_arm = 'Experimental', desirable_response = 'decreasing' ) )
+#' desirable_response_proportion( data, list( trt_arm = 'Experimental',
+#'                                            desirable_response = 'decreasing' ) )
 #' @export
 desirable_response_proportion <- function( data,
                                           scoring_function_parameters = NULL ){
@@ -317,7 +332,8 @@ desirable_response_proportion <- function( data,
 #' require( survival )
 #' df <- data.frame( y = Surv( runif( min = 0, max = 20, n = N ),
 #'                             sample( c(0,1), size = N, prob = c(0.2,0.8), replace = TRUE ) ),
-#'                   trt = sample( c('Control','Experimental'), size = N, prob = c(0.4,0.6), replace = TRUE ) )
+#'                   trt = sample( c('Control','Experimental'), size = N,
+#'                                 prob = c(0.4,0.6), replace = TRUE ) )
 #' 
 #' ## Compute median survival time in Experimental treatment arm.
 #' ex1 <- survival_time_quantile( data = df,
@@ -330,7 +346,8 @@ desirable_response_proportion <- function( data,
 #' ## behavior is to use this variable as the treatment variable. To override
 #' ## the default behavior trt = NULL is included in scoring_function_parameters.
 #' ex2 <- survival_time_quantile( data = df,
-#'                                scoring_function_parameters = list( trt = NULL, percentile = 0.25 ) )
+#'                                scoring_function_parameters = list( trt = NULL,
+#'                                                          percentile = 0.25 ) )
 #' @export
 survival_time_quantile <- function( data,
                                     scoring_function_parameters = NULL ){ 
@@ -438,7 +455,8 @@ survival_time_quantile <- function( data,
 #' N <- 200
 #' df <- data.frame( y = Surv( runif( min = 0, max = 20, n = N ),
 #'                             sample( c(0,1), size = N, prob = c(0.2,0.8), replace = TRUE ) ),
-#'                   trt = sample( c('Control','Experimental'), size = N, prob = c(0.4,0.6), replace = TRUE ) )
+#'                   trt = sample( c('Control','Experimental'), size = N,
+#'                                 prob = c(0.4,0.6), replace = TRUE ) )
 #' 
 #' ## Compute difference in median survival time between Experimental arm and
 #' ## Control arm.  It is not actually necessary to provide the value for the

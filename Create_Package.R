@@ -75,42 +75,44 @@ system( cmd7 )
 # Remove unwanted help files                                                    #
 #################################################################################
 
-HELP_FILES_TO_RETAIN <- c(
-    'binary_transform.Rd',
-    'bootstrap.Rd',
-    'ctree_wrapper.Rd',
-    'desirable_response_proportion.Rd',
-    'diff_mean_deviance_residuals.Rd',
-    'diff_quantile_response.Rd',
-    'diff_restricted_mean_survival_time.Rd',
-    'diff_survival_time_quantile.Rd',
-    'distribution.Rd',
-    'get_covariates.Rd',
-    'get_trt.Rd',
-    'get_y.Rd',
-    'mean_deviance_residuals.Rd',
-    'mean_response.Rd',
-    'mob_wrapper.Rd',
-    'parse_party.Rd',
-    'parse_rpart.Rd',
-    'permutation.Rd',
-    'quantile_response.Rd',
-    'rpart_nodes.Rd',
-    'rpart_wrapper.Rd',
-    'subgroup.Rd',
-    'subsample.Rd',
-    'survival_time_quantile.Rd',
-    'treatment_effect.Rd',
-    'TSDT.Rd',
-    'unpack_args.Rd',
-    'Bootstrap.ClassDefinition.Rd',
-    'BootstrapStatistic.ClassDefinition.Rd',
-    'Subsample.ClassDefinition.Rd',
-    'TSDT.ClassDefinition.Rd',
-    'TSDT_Sample.ClassDefinition.Rd',
-    'TSDT_CutpointDistribution.ClassDefinition.Rd'
- )
+## HELP_FILES_TO_RETAIN <- c(
+##     'binary_transform.Rd',
+##     'bootstrap.Rd',
+##     'ctree_wrapper.Rd',
+##     'desirable_response_proportion.Rd',
+##     'diff_mean_deviance_residuals.Rd',
+##     'diff_quantile_response.Rd',
+##     'diff_restricted_mean_survival_time.Rd',
+##     'diff_survival_time_quantile.Rd',
+##     'distribution.Rd',
+##     'get_covariates.Rd',
+##     'get_trt.Rd',
+##     'get_y.Rd',
+##     'mean_deviance_residuals.Rd',
+##     'mean_response.Rd',
+##     'mob_wrapper.Rd',
+##     'parse_party.Rd',
+##     'parse_rpart.Rd',
+##     'permutation.Rd',
+##     'quantile_response.Rd',
+##     'rpart_nodes.Rd',
+##     'rpart_wrapper.Rd',
+##     'subgroup.Rd',
+##     'subsample.Rd',
+##     'survival_time_quantile.Rd',
+##     'treatment_effect.Rd',
+##     'TSDT.Rd',
+##     'unpack_args.Rd',
+##     'Bootstrap.ClassDefinition.Rd',
+##     'BootstrapStatistic.ClassDefinition.Rd',
+##     'Subsample.ClassDefinition.Rd',
+##     'TSDT.ClassDefinition.Rd',
+##     'TSDT_Sample.ClassDefinition.Rd',
+##     'TSDT_CutpointDistribution.ClassDefinition.Rd'
+##  )
 
+
+HELP_FILES_TO_RETAIN <- NULL
 
 RD_FILES <- list.files( path = paste0( ProjectPath, 'TSDT/man' ), pattern = '*.Rd' )
 
@@ -121,12 +123,16 @@ cmd8 <- paste0( 'rm -rf ', paste( ProjectPath, 'TSDT/man/', HELP_FILES_TO_REMOVE
 cat( "Remove unwanted help files\n" )
 system( cmd8 )
 
+
+
 #################################################################################
 # Generate help files and build package                                         #
 #################################################################################
 
-#roxygenise( paste0( ProjectPath, "TSDT" ) )
-devtools::document( paste0( ProjectPath, "TSDT" ) )
+roxygenise( paste0( ProjectPath, "TSDT" ) )
+
+## devtools::load_all( paste0( ProjectPath, "TSDT" ) )
+#devtools::document( paste0( ProjectPath, "TSDT" ) )
 
 cmd9 <- paste0( "cp ", ProjectPath, 'Manually_Edited_Files/nin.Rd ', ProjectPath, "TSDT/man/grapes-nin-grapes.Rd" )
 system( cmd9 )

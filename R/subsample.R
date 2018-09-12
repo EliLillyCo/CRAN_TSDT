@@ -118,7 +118,8 @@ get_subsamples <- function( x, trt, trt_control, training_fraction, validation_f
 #' N <- 50
 #' x <- data.frame( runif( N ) )
 #' names( x ) <- "response"
-#' x$treatment <- factor( sample( c("Control","Experimental"), size = N, prob = c(0.8,0.2), replace = TRUE ) )
+#' x$treatment <- factor( sample( c("Control","Experimental"), size = N,
+#'                        prob = c(0.8,0.2), replace = TRUE ) )
 #' 
 #' ## Generate two subsamples
 #' ex1 <- subsample( x,
