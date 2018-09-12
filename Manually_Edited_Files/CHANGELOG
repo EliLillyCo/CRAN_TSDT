@@ -1,0 +1,287 @@
+Changes from Version 0.1 to 0.1.1 [14-Apr-2014]
+	
+  * Adding logging to track usage of TSDT.
+	
+  * Removing missing response when computing subgroup mean response.
+	
+Changes from Version 0.1.1 to 0.1.2 [30-Apr-2014]
+	
+  * Sorting split variables in collapse_redundant_split to get unique list
+	of splits -- i.e. X2<xxxxx & X1>=xxxxx should not be considered a
+	different subgroup from X1>=xxxxx & X2<xxxxxx.
+	
+Changes from Version 0.1.2 to 0.1.3 [09-May-2014]
+	
+  * Change permute_method to either accept the character name of the 
+	permute function or the name of the function directly (.i.e. not as
+	a string.)
+	
+  * Remove Adjusted_Pvalue and associated Strength for Overall subgroup
+	since these have no meaningful interpretation.
+	
+Changes from Version 0.1.3 to 0.1.4 [12-May-2014]
+	
+  * Remove Internal_Consistency and External_Consistency for Overall 
+	subgroup because they have no meaningful interpretation.
+	
+Changes from Version 0.1.4 to 0.1.5 [16-May-2014]
+
+  * Embedded logging functionality in tryCatch block so user's do not get
+	errors or warnings if logging fails.
+	
+Changes from Version 0.1.5 to 0.1.6 [01-Jun-2014]
+
+  * Round variables to six decimal places when subsetting data to create
+	subgroups from trees built by ctree. The numerical precision of
+	ctree is apparently limited to six decimal places so if the 
+	covariate data is not also rounded to six decimal places before
+	subsetting then subgroup sizes might differ from the ctree internal
+	representation of the tree. This could result in some subgroups
+	having fewer than the minimum required number of subjects.
+
+ Changes from Version 0.1.6 to 0.1.7 [10-Jun-2014]
+
+  * Change the covariate data passed into get_null_scores() from the 
+	covariates data.frame to the source_data data.frame so the 
+	WEIGHTS__ variables is also passed when present.
+	
+ Changes from Version 0.1.7 to 0.1.8 [05-Jul-2014]
+
+  * Add trace parameter to TSDT to print progress of permutation 
+	computation to console.
+	
+ Changes from Version 0.1.8 to 0.1.9 [30-Jul-2014]
+
+  * Fix error in subsample. It was dropping the expermimental arm.
+
+  * Added code to transform a binary variable (taking two unique values,
+	but they could be any value) to a strictly {0,1} variable.
+	
+ Changes from Version 0.1.9 to 0.1.10 [03-Aug-2014]
+	
+  * Move httpRequest from Depends to Suggests
+	
+ Changes from Version 0.1.10 to 0.1.11 [10-Nov-2014]
+	
+  * Change whitespace in character variable values and factor levels to 
+	an underscore.
+
+ Changes from Version 0.1.11 to 0.1.12 [13-Nov-2014]
+	
+  * Change deprecated multicore package to parallel.
+	
+ Changes from Version 0.1.12 to 0.1.13 [19-Nov-2014]
+	
+  * Remove records with missing response.
+	
+ Changes from Version 0.1.13 to 0.1.14 [24-Nov-2014]
+	
+  * Add code to handle when quantile__ in TSDT_scoring_functions.R is of
+	class numeric.
+	
+Changes from Version 0.1.14 to 0.1.15 [27-Nov-2014]
+
+  * Add vector of NULL_SCORES to distributions slot of TSDT class.
+	
+Changes from Version 0.1.15 to 0.1.16 [02-Dec-2014]
+
+  * Add code to return NA for survival_time_quantile in 
+	TSDT_scoring_functions.R if specified survival quantile is not
+	obtained.
+	
+Changes from Version 0.1.16 to 0.1.17 [19-Dec-2014]
+	
+  * Add code to return compute weighted mean response in in-bag and oob 
+	samples if case weights provided.
+	
+Changes from Version 0.1.17 to 0.1.18 [03-Jan-2015]
+	
+  * Add code to print weighted mean response (where appropriate) in 
+	summary results. Version 0.1.17 computed weighted means for 
+	individual trees, but reported unweighted means in summary results.
+
+Changes from Version 0.1.18 to 0.1.19 [06-Jan-2015]
+	
+  * Add a dummy Logger function for when access to a web host for 
+	processing the logging POST requests is unavailable.
+	
+  * Subsetting a survival response destroys the Surv object and reduces it
+	to a two-column matrix. Added code to construct the survival object
+	after subsetting for both one-arm and two-arm samples.
+	
+Changes from Version 0.1.19 to 0.1.20 [24-Jan-2015]
+	
+  * Add code to use ceiling of user-provided minimum subgroup sizes in case
+	non-integer values are given.
+	
+Changes from Version 0.1.20 to 0.1.21 [12-Feb-2015]
+	
+  * Correct typo "surival" to "survival" in TSDT_helper_functions.R.
+
+Changes from Version 0.1.21 to 0.1.22 [24-Aug-2015]
+	
+  * Change definition of superior subgroup when scoring function is
+	proportion_desirable_response. A superior subgroup should *always*
+	have an Inbag_Score that is *greater* than overall. Do not change
+	to less than overall for a decreasing desirable response. This is
+	already accounted for by computing the Inbag_Score as the
+	proportion of records with response == 0 rather than response == 1.
+	
+Changes from Version 0.1.22 to 0.1.23 [26-Aug-2015]
+	
+   * Compute permutation p-value as (k+1)/(n+1)
+
+	where
+	
+	k is the number of null scores (strictly) greater than the observed
+	score (the observed score is the product of internal and external
+	consistency for a subgroup
+
+	n is the total number of perumuted scores.
+
+	Previous k was not computed with strict inequality.
+	
+Changes from Version 0.1.23 to 0.1.24 [30-Aug-2015]
+
+   * Allow user to specify different minimum subgroup sizes for in-bag and
+	and out-of-bag data.
+
+   * Allow user to specify minimum subgroup size as a proportion of the
+	sample. Previously, minumim subgroup sizes were specified as an
+	absolute number. Both methods are now available.
+	
+Changes from Version 0.1.24 to 0.1.25 [16-Sep-2015]
+
+   * Change function space2underscore() to operate on data columns where
+	any class in the column's class hierarchy is "factor" or
+	"character". This change accomodates ordered factors, which have
+	class '"ordered" "factor"'.
+	
+Changes from Version 0.1.25 to 0.1.26 [29-Sep-2015]
+
+   * Set permutation-adjusted p-value to 1 when the observed score is zero
+	i.e. ExternalConsistency is zero. 
+
+Changes from Version 0.1.26 to 0.1.27 [30-Sep-2015]
+
+   * Use RNGkind( kind = "L'Ecuyer-CMRG" ) and mc.reset.stream() to get
+	reproducible results in a multicore environment.
+
+Changes from Version 0.1.27 to 0.1.28 [10-Feb-2016]
+
+  * Keep scoring_function_parameters as a list in final TSDT object --
+	i.e. remove call to unlist().
+	
+  * Add restricted mean survival time as scoring function for surival
+	response.
+
+Changes from Version 0.1.28 (BSID) to 0.0.1 (TSDT) [23-Feb-2016]
+	
+  * The TSDT portion of the BSID package has been removed from BSID
+	and placed in a new package called TSDT.
+
+Changes from Version 0.0.1 to 0.0.2 [29-Mar-2016]
+
+  * Change default minimum subgroup size from 20% of each treatment arm
+	to 10% of each treatment arm.
+	
+Changes from Version 0.0.2 to 0.0.3 [30-Mar-2016]
+
+  * Add code to Roxygen comments for summary method documentation to export
+	the summary() method and bind the method to the TSDT class.
+	
+Changes from Version 0.0.3 to 0.0.4 [05-Apr-2016]
+
+  * Add documentation for function get_suggested_subgroup().
+
+Changes from Version 0.0.4 to 0.0.5 [10-Apr-2016]
+
+  * Add code to remove variables from tree_builder_parameters$cost for the
+	competitor trees as primary splitting variables are removed.
+	
+Changes from Version 0.0.5 to 0.0.6 [10-May-2016]
+
+  * Add cpart() from CustomPartition as a new tree-building algorithm.
+	
+  * If user enters min_subgroup_n_* value that is greater than the total
+	count of trt or control subjects an error is returned.
+
+  * Make superior_subgroups$Subgroup character rather than factor
+	
+Changes from Version 0.0.6 to 0.0.7 [19-May-2016]
+
+* Export all scoring functions so they are callable by the user.
+	
+* Do not use covariates in survival scoring functions. This often leads
+  to non-convergence. Instead, estimate survival models on intercept only.
+
+* Reset all factor variables in covariates so no levels with zero records
+  remain.
+
+* Reconstruct Surv object after subsetting to specific treatment arm in
+  survival scoring functions.
+
+Changes from Version 0.0.7 to 0.0.8 [15-Jul-2016]
+
+* Use double brakcets when populating a list of S4 objects: e.g.
+  mylist[[i]] <- S4_object. A recent version of R deprecates the single
+  bracket notation.
+	
+Changes from Version 0.0.8 to 0.0.9 [19-Jul-2016]
+
+* Add hazard_ratio as a new scoring_function.
+
+* Change sampling_proportion parameter in documentation to inbag_proportion
+  to be consistent with code.	
+
+Changes from Version 0.0.9 to 0.0.10 [19-Jul-2016]
+
+* Remove elements from tree_builder_paramters$cost vector by position index
+  rather than name in case the vector elements are unnamed.	
+
+Changes from Version 0.0.10 to 0.0.11 [27-Jul-2016]
+
+* Add documentation for TSDT::get_cutpoints accessor method and export to
+  user.	
+
+Changes from Version 0.0.11 to 0.0.12 [24-Aug-2016]
+
+* Make sure R doesn't demote covariates data.frame to vector when removing
+  columns while growing growing competitor trees.
+
+Changes from Version 0.0.12 to 0.0.13 [11-Nov-2016]
+
+* The bootstrap function was only retaining unique rows in the in-bag data.
+  This made the in-bag data have fewer rows than the original data. The
+  bootstrap function now retains all resampled rows (including duplicate
+  rows).
+	
+Changes from Version 0.0.13 to 0.0.14 [16-Nov-2016]
+
+* Remove commented-out code.
+
+Changes from Version 0.0.14 to 0.0.15 [16-Nov-2016]
+
+* Export cutpoints and distribution functions to user.
+
+Changes from Version 0.0.15 to 0.0.16 [31-Jul-2017]
+
+* Translate logical inequalities that appear in character variable values
+  so they will not be interpreted as numeric subgroups by parse_subgroups.
+  The translated values are converted back to their original values in the
+  final output.
+  The translations are as follows:
+	">=" --> "%%__GE__%%"
+	"<=" --> "%%__LE__%%"
+	">"  --> "%%__GT__%%"
+	"<"  --> "%%__LT__%%"
+	"="  --> "%%__EQ__%%"
+	""   --> "%%__EMPTY_STRING__%%"
+	
+Changes from Version 0.0.16 to 0.0.17 [08-Nov-2017]
+	
+* Prepare code for publication on CRAN. This involves removing references
+  to CustomPartition, removing logic for logging, and removing code for
+  sourcing other scripts.
+
+
