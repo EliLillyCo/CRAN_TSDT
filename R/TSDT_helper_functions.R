@@ -190,6 +190,9 @@ get_scoring_function <- function( scoring_function = NULL,
                                   data,
                                   scoring_function_parameters = NULL ){
 
+  ## Create NULL placeholders to prevent NOTE in R CMD check
+  response_type <- NULL
+  
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
   
@@ -274,8 +277,10 @@ get_superior_subgroups <- function( splits,
                                     scoring_function_parameters = NULL ){
 
 
+  ## Create NULL placeholders to prevent NOTE in R CMD check
+  response_type <- NULL
+  
   unpack_args( scoring_function_parameters )
-
 
   if( response_type != "survival" ){
     inbag_mean_response <- splits$Mean_Inbag_Response  
@@ -369,6 +374,12 @@ get_score <- function( splits,
                        min_subgroup_n_oob_control,
                        min_subgroup_n_oob_trt ){
 
+
+  ## Create NULL placeholders to prevent NOTE in R CMD check
+  scoring_function_name <- NULL
+  trt_control <- NULL
+  trt_var <- NULL
+  
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
 
@@ -459,11 +470,22 @@ populate_tsdt_samples <- function( samples,
                                    tree_builder,
                                    tree_builder_parameters ){
 
+  ## Create NULL placeholders to prevent NOTE in R CMD check
+  y_var <- NULL
+  covariate_vars <- NULL
+  trt_var <- NULL
+  INVALID_TREE__ <- NULL
+  Superior_Inbag_Subgroup <- NULL
+  
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
 
-    if( !is.null( tree_builder_parameters ) )
+  if( !is.null( tree_builder_parameters ) )
       unpack_args( tree_builder_parameters )
+
+
+  if( is.null( trt_var ) )
+      rm( trt_var )
   
   OverallInternalConsistency <- NULL
   OverallExternalConsistency <- data.frame( Subgroup = character(0),
@@ -706,7 +728,14 @@ get_null_scores <- function( n_permutations,
                              min_subgroup_n_oob_control,
                              min_subgroup_n_oob_trt,
                              n_cpu,
-                             trace ){
+                            trace ){
+  
+  ## Create NULL placeholders to prevent NOTE in R CMD check
+  trt_control <- NULL
+  OverallExternalConsistency <- NULL
+  OverallInternalConsistency <- NULL
+  Subgroup <- NULL
+  TSDT_SAMPLES <- NULL
   
   if( !is.null(  scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
@@ -834,6 +863,10 @@ get_null_scores <- function( n_permutations,
 get_y <- function( data,
                   scoring_function_parameters = NULL ){
 
+  ## Create NULL placeholders to prevent NOTE in R CMD check
+  y_var <- NULL
+  y_col <- NULL
+  
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
   
@@ -897,6 +930,10 @@ get_y <- function( data,
 #' @export
 get_trt <- function( data,
                      scoring_function_parameters = NULL ){
+
+  ## Create NULL placeholders to prevent NOTE in R CMD check
+  trt_var <- NULL
+  trt_col <- NULL
   
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
@@ -953,7 +990,11 @@ get_trt <- function( data,
 #' @export
 get_covariates <- function( data,
                             scoring_function_parameters ){
-   
+
+  ## Create NULL placeholders to prevent NOTE in R CMD check
+  covariate_vars <- NULL
+  covariate_cols <- NULL
+    
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
   

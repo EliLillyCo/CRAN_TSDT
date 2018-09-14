@@ -646,6 +646,9 @@ trim <- function( x ){
 
 get_rpart_subgroup <- function( tree, node_id ){
 
+  ## Create NULL placeholders to prevent NOTE in R CMD check
+  NodeID <- NULL
+  
   if( node_id %nin% tree$NodeID )
       stop( "ERROR: node_id not found in tree" )
 

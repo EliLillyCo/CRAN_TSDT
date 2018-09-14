@@ -7,6 +7,9 @@
 #################################################################################
 
 scoring_function_wrapper <- function( scoring_function_name, data, scoring_function_parameters = NULL ){
+
+  ## Create NULL placeholders to prevent NOTE in R CMD check
+  result <- NULL
   
   scoring_function_text <- paste0( 'result <- ', scoring_function_name, '( data' )
 
@@ -54,7 +57,10 @@ scoring_function_wrapper <- function( scoring_function_name, data, scoring_funct
 #' @export
 mean_response <- function( data,
                            scoring_function_parameters = NULL ){
-      
+
+  ## Create NULL placeholders to prevent NOTE in R CMD check
+  trt_arm <- NULL
+  
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
 
@@ -113,7 +119,10 @@ mean_response <- function( data,
 #' @export
 quantile_response <- function( data,
                                scoring_function_parameters = NULL ){
-      
+
+  ## Create NULL placeholders to prevent NOTE in R CMD check
+  trt_arm  <- NULL
+  
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
   
@@ -262,8 +271,8 @@ treatment_effect <- function( data,
 #' @examples
 #' N <- 50
 #' 
-#' data <- data.frame( continuous_response = numeric(N),
-#'                    trt = character(N) )
+#' data <- data.frame( binary_response = numeric(N),
+#'                     trt = character(N) )
 #' 
 #' data$binary_response <- sample( c(0,1), size = N, prob = c(0.5,0.5), replace = TRUE )
 #' data$trt <- sample( c('Control','Experimental'), size = N, prob = c(0.4,0.6), replace = TRUE )
@@ -279,7 +288,7 @@ treatment_effect <- function( data,
 #'                                            desirable_response = 'decreasing' ) )
 #' @export
 desirable_response_proportion <- function( data,
-                                          scoring_function_parameters = NULL ){
+                                           scoring_function_parameters = NULL ){
 
   ## Create NULL placeholders to prevent NOTE in R CMD check
   desirable_response <- NULL
@@ -357,6 +366,9 @@ survival_time_quantile <- function( data,
                                     scoring_function_parameters = NULL ){ 
   
   requireNamespace( "survival", quietly = TRUE )
+  
+  ## Create NULL placeholders to prevent NOTE in R CMD check
+  trt_control <- NULL
   
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
@@ -544,6 +556,9 @@ mean_deviance_residuals <- function( data,
 
   requireNamespace( "survival", quietly = TRUE )
 
+  ## Create NULL placeholders to prevent NOTE in R CMD check
+  trt_control <- NULL
+  
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
 

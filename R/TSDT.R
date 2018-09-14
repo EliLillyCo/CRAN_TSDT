@@ -250,6 +250,10 @@ TSDT <- function( response = NULL,
                   n_cpu = 1,
                   trace = FALSE ){
   
+  ## Create NULL placeholders to prevent NOTE in R CMD check
+  scoring_function_name <- NULL
+  PID0 <- NULL
+  
   if( tree_builder %nin% c('rpart','ctree','mob') )
       stop( 'ERROR: tree_builder must be one of {rpart,ctree,mob}' )
   
@@ -262,7 +266,7 @@ TSDT <- function( response = NULL,
   if( n_cpu > 1 ){
     requireNamespace( "parallel", quietly = TRUE )
     RNGkind( kind = "L'Ecuyer-CMRG" )
-    mc.reset.stream()
+    parallel::mc.reset.stream()
   }
   
   if( n_cpu > n_samples )
@@ -651,13 +655,15 @@ TSDT <- function( response = NULL,
   
   else if( n_cpu > 1 ){
 
+    requireNamespace( "parallel", quietly = TRUE )
+    
     SAMPLES_PARTITION <- partition( 1:length(samples), n = n_cpu )
     
     PID0 <<- Sys.getpid()
     
     for( p in 1:length( SAMPLES_PARTITION ) ){
 
-      mcparallel({
+      parallel::mcparallel({
         
         tsdt_samples_list <- populate_tsdt_samples( samples = samples[ SAMPLES_PARTITION[[p]] ],
                                                    response_type = response_type,
@@ -679,7 +685,7 @@ TSDT <- function( response = NULL,
 
     }
 
-    JOBS <- mccollect()
+    JOBS <- parallel::mccollect()
     
     TSDT_SAMPLES <- NULL
     OverallExternalConsistency <- data.frame( Subgroup = character(0),
