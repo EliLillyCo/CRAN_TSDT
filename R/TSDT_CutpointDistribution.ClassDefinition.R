@@ -11,7 +11,7 @@
 #              definition.
 #################################################################################
 
-suppressMessages( require( hash ) )
+requireNamespace( "hash", quietly = TRUE )
 
 #' @title TSDT_CutpointDistribution
 #' @description Implementation of TSDT_CutpointDistribution class. This class
@@ -28,7 +28,7 @@ setClass( "TSDT_CutpointDistribution",
 
 setMethod( f = "initialize", signature =  "TSDT_CutpointDistribution",
           definition = function(.Object, Cutpoints = NULL ){
-            suppressMessages( require( hash ) )
+            requireNamespace( "hash", quietly = TRUE )
             if( is.null( Cutpoints ) || class( Cutpoints ) != 'hash' ){
               .Object@Cutpoints = hash()
             }else{
@@ -135,6 +135,9 @@ setMethod( f = "set_cutpoints", signature = "TSDT_CutpointDistribution",
 setGeneric( name = "get_cutpoints",
             def = function( .Object, subgroup, subsub = NULL ){standardGeneric("get_cutpoints")} )
 
+
+#' @rdname get_cutpoints-methods
+#' @aliases get_cutpoints,ANY-method
 setMethod( f = "get_cutpoints", signature = "TSDT_CutpointDistribution",
 
           definition = function( .Object,
@@ -153,6 +156,8 @@ setMethod( f = "get_cutpoints", signature = "TSDT_CutpointDistribution",
 
 
 ## Define a get_cutpoints accesor methed when .Object is of class TSDT
+#' @rdname get_cutpoints-methods
+#' @aliases get_cutpoints,ANY-method
 setMethod( f = "get_cutpoints", signature = "TSDT",
 
           definition = function( .Object,

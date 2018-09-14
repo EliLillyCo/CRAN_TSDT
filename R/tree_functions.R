@@ -104,7 +104,7 @@ superior_subgroups <- function( splits, mean_response, score, threshold, desirab
 #' @return A data.frame containing the data consistent with the specified
 #' subgroup.
 #' @examples
-#' suppressMessages( require( rpart ) )
+#' requireNamespace( "rpart", quietly = TRUE )
 #' 
 #' ## Generate example data containing response, treatment, and covariates
 #' N <- 20
@@ -123,7 +123,7 @@ superior_subgroups <- function( splits, mean_response, score, threshold, desirab
 #' covariates$X4 <- X4
 #' 
 #' ## Fit an rpart model
-#' fit <- rpart( continuous_response ~ trt + X1 + X2 + X3 + X4 )
+#' fit <- rpart::rpart( continuous_response ~ trt + X1 + X2 + X3 + X4 )
 #'
 #' ## Return parsed splits with subgroups
 #' splits1 <- parse_rpart( fit, include_subgroups = TRUE )

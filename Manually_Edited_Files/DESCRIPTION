@@ -7,7 +7,7 @@ Author: Chakib Battioui, Brian Denton
 Maintainer: Brian Denton <denton_brian_david@lilly.com>
 Description: Implements a method for identifying subgroups with
              superior response relative to the overall sample.
-Imports: methods, mlbench, hash, party, rpart, survival, survRM2, stats
+Imports: methods, mlbench, hash, party, rpart, survival, survRM2, stats, modeltools, utils
 Suggests: parallel
 LazyLoad: no
 License: GPL (>= 2)

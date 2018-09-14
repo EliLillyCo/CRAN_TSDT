@@ -136,7 +136,11 @@ roxygenise( paste0( ProjectPath, "TSDT" ) )
 
 cmd9 <- paste0( "cp ", ProjectPath, 'Manually_Edited_Files/nin.Rd ', ProjectPath, "TSDT/man/grapes-nin-grapes.Rd" )
 system( cmd9 )
-    
+
+
+## Replace NAMESPACE file
+system( cmd5.2 )
+
 build( paste0( ProjectPath, "TSDT" ) )
 
 ## END OF FILE

@@ -19,7 +19,7 @@ source( "tree_functions.R" )
 #' @param tree An rpart.object returned from call to rpart().
 #' @return A data.frame containing the nodes of a parsed tree.
 #' @examples
-#' suppressMessages( require( rpart ) )
+#' requireNamespace( "rpart", quietly = TRUE )
 #' ## Generate example data containing response, treatment, and covariates
 #' N <- 50
 #' continuous_response = runif( min = 0, max = 20, n = N )
@@ -33,7 +33,7 @@ source( "tree_functions.R" )
 #' X4 <- sample( c('A','B','C'), size = N, prob = c(0.6,0.3,0.1), replace = TRUE )
 #' 
 #' ## Fit an rpart model with continuous response (i.e. regression)
-#' fit1 <- rpart( continuous_response ~ trt + X1 + X2 + X3 + X4 )
+#' fit1 <- rpart::rpart( continuous_response ~ trt + X1 + X2 + X3 + X4 )
 #' fit1
 #' 
 #' ## Parse the results into a new data.frame
@@ -41,7 +41,7 @@ source( "tree_functions.R" )
 #' ex1
 #' 
 #' ## Fit an rpart model with binary response (i.e. classification)
-#' fit2 <- rpart( binary_response ~ trt + X1 + X2 + X3 + X4 )
+#' fit2 <- rpart::rpart( binary_response ~ trt + X1 + X2 + X3 + X4 )
 #' fit2
 #' @export
 rpart_nodes <- function( tree ){
@@ -51,7 +51,7 @@ rpart_nodes <- function( tree ){
   rpart_output <- gsub( pattern = "< ", replacement = "<", rpart_output )
   rpart_output <- gsub( pattern = "> ", replacement = ">", rpart_output )
   
-  classification <- ifelse(  grepl( "(yprob)", rpart_output[[3]] ), TRUE, FALSE )
+  classification <- ifelse( grepl( "(yprob)", rpart_output[[3]] ), TRUE, FALSE )
   
   rpart_output <- rpart_output[ grepl( "^[0-9]+)", rpart_output ) ]
   
@@ -120,7 +120,7 @@ rpart_nodes <- function( tree ){
 #' a string representation of the subgroups in the results. Defaults to FALSE.
 #' @return A data.frame containing a parsed tree.
 #' @examples
-#' suppressMessages( require( rpart ) )
+#' requireNamespace( "rpart", quietly = TRUE )
 #' ## Generate example data containing response, treatment, and covariates
 #' N <- 50
 #' continuous_response = runif( min = 0, max = 20, n = N )
@@ -132,8 +132,8 @@ rpart_nodes <- function( tree ){
 #' X4 <- sample( c('A','B','C'), size = N, prob = c(0.6,0.3,0.1), replace = TRUE )
 #' 
 #' ## Fit an rpart model
-#' fit <- rpart( continuous_response ~ trt + X1 + X2 + X3 + X4,
-#'               control = rpart.control( maxdepth = 3L ) )
+#' fit <- rpart::rpart( continuous_response ~ trt + X1 + X2 + X3 + X4,
+#'                      control = rpart::rpart.control( maxdepth = 3L ) )
 #' fit
 #' 
 #' ## Parse the results into a new data.frame
@@ -258,7 +258,7 @@ rpart_wrapper <- function( response,
                            covariates = NULL,
                            tree_builder_parameters = NULL,
                            prune = FALSE ){
-  suppressMessages( require( rpart ) )
+  requireNamespace( "rpart", quietly = TRUE )
   
   if( is.null( tree_builder_parameters ) )
       tree_builder_parameters <- list()
@@ -314,7 +314,7 @@ rpart_wrapper <- function( response,
       tree_builder_parameters$subset <- NULL
   
   if( "na.action" %nin% names( tree_builder_parameters ) )
-      tree_builder_parameters$na.action <- na.rpart
+      tree_builder_parameters$na.action <- rpart::na.rpart
   
   if( "model" %nin% names( tree_builder_parameters ) )
       tree_builder_parameters$model <- FALSE
@@ -326,7 +326,7 @@ rpart_wrapper <- function( response,
       tree_builder_parameters$y <- TRUE
   
   if( "control" %nin% names( tree_builder_parameters ) )
-      tree_builder_parameters$control <- rpart.control()
+      tree_builder_parameters$control <- rpart::rpart.control()
   
   if( "weights" %nin% names( tree_builder_parameters ) )
       tree_builder_parameters$weights <- NULL
@@ -346,21 +346,21 @@ rpart_wrapper <- function( response,
   formula__ <- as.formula( paste0( formulaY, formulaX ) )
   
   #TODO: what is rpart parms?
-  fit <- rpart( formula__,
-                weights = tree_builder_parameters$weights,
-                subset = tree_builder_parameters$subset,
-                na.action = tree_builder_parameters$na.action,
-                #parms = tree_builder_parameters$parms,
-                method = tree_builder_parameters$method,
-                model = tree_builder_parameters$model,
-                x = tree_builder_parameters$x,
-                y = tree_builder_parameters$y,
-                control = tree_builder_parameters$control,
-                cost = tree_builder_parameters$cost )
+  fit <- rpart::rpart( formula__,
+                      weights = tree_builder_parameters$weights,
+                      subset = tree_builder_parameters$subset,
+                      na.action = tree_builder_parameters$na.action,
+                      #parms = tree_builder_parameters$parms,
+                      method = tree_builder_parameters$method,
+                      model = tree_builder_parameters$model,
+                      x = tree_builder_parameters$x,
+                      y = tree_builder_parameters$y,
+                      control = tree_builder_parameters$control,
+                      cost = tree_builder_parameters$cost )
   
  # Prune fit according to smallest cross-validation error in cptable
   if( prune )
-      fit <- prune( fit, cp = fit$cptable[ which.min(fit$cptable[,"xerror"]),"CP" ] )
+      fit <- rpart::prune( fit, cp = fit$cptable[ which.min(fit$cptable[,"xerror"]),"CP" ] )
   
   return( fit )
   

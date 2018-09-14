@@ -10,7 +10,7 @@
 #################################################################################
 # Implement a container class for trees created by party::ctree()               #
 #################################################################################
-suppressMessages( require( party ) )
+requireNamespace( "party", quietly = TRUE )
 
 #' @title CTree
 #' @description CTree is a container class for trees created by \link[party]{ctree}.
@@ -93,7 +93,7 @@ setMethod( f = "show", signature = "MOB",
 #' @seealso \link[party]{ctree}
 #' @return An object of class \linkS4class{CTree}
 #' @examples
-#' suppressMessages( require( party ) )
+#' requireNamespace( "party", quietly = TRUE )
 #' ## From party::ctree() examples:
 #' set.seed(290875)
 #' airq <- subset(airquality, !is.na(Ozone))
@@ -106,13 +106,14 @@ setMethod( f = "show", signature = "MOB",
 #' ## 'controls' (with an 's'), rather than 'control' as in rpart.
 #' ex2 <- ctree_wrapper( response = airq$Ozone,
 #'                       covariates = subset( airq, select = -Ozone ),
-#'                       tree_builder_parameters = list( controls = ctree_control( maxdepth = 2 ) ) )
+#'                       tree_builder_parameters = list( controls =
+#'                                              party::ctree_control( maxdepth = 2 ) ) )
 #' @export
 ctree_wrapper <- function( response,
                           covariates = NULL,
                           tree_builder_parameters = list() ){
 
-  suppressMessages( require( party ) )
+  requireNamespace( "party", quietly = TRUE )
 
   df__ <- as.data.frame( response )
   if( !is.null( names( response ) ) ){
@@ -129,7 +130,7 @@ ctree_wrapper <- function( response,
       tree_builder_parameters$weights <- NULL
   
   if( "controls" %nin% names( tree_builder_parameters ) )
-      tree_builder_parameters$controls <- ctree_control()
+      tree_builder_parameters$controls <- party::ctree_control()
   
   if( "xtrafo" %nin% names( tree_builder_parameters ) )
       tree_builder_parameters$xtrafo <- ptrafo
@@ -147,14 +148,14 @@ ctree_wrapper <- function( response,
   formulaX <- paste( names(covariates), sep = "", collapse = "+" )
   formula__ <- as.formula( paste0( formulaY, " ~ ", formulaX ) )
   
-  fit <- ctree( formula__,
-                data = df__,
-                subset = tree_builder_parameters$subset,
-                weights = tree_builder_parameters$weights,
-                controls = tree_builder_parameters$controls,
-                xtrafo = tree_builder_parameters$xtrafo,
-                ytrafo = tree_builder_parameters$ytrafo,
-                scores = tree_builder_parameters$scores )
+  fit <- party::ctree( formula__,
+                      data = df__,
+                      subset = tree_builder_parameters$subset,
+                      weights = tree_builder_parameters$weights,
+                      controls = tree_builder_parameters$controls,
+                      xtrafo = tree_builder_parameters$xtrafo,
+                      ytrafo = tree_builder_parameters$ytrafo,
+                      scores = tree_builder_parameters$scores )
 
 
   ctree__ <- new( "CTree", tree = fit, data = df__, parameters = tree_builder_parameters )
@@ -185,7 +186,7 @@ mob_wrapper <- function( response,
                          covariates = NULL,
                          tree_builder_parameters = list() ){
     
-    suppressMessages( require( party ) )
+    requireNamespace( "party", quietly = TRUE )
 
     if( is.null( z ) && !is.null( covariates ) )
         z <- covariates
@@ -211,7 +212,7 @@ mob_wrapper <- function( response,
         tree_builder_parameters$na.action <- na.omit
     
     if( "model" %nin% names( tree_builder_parameters ) )
-        tree_builder_parameters$model <- glinearModel
+        tree_builder_parameters$model <- modeltools::glinearModel
 
     if( "control" %nin% names( tree_builder_parameters ) )
         tree_builder_parameters$control <- mob_control()
@@ -226,12 +227,12 @@ mob_wrapper <- function( response,
     
     formula__ <- as.formula( paste0( formulaY, ' ~ ', formulaX, ' | ', formulaZ ) )
     
-    fit <- mob( formula__,
-                data = df__,
-                weights = tree_builder_parameters$weights,
-                na.action = tree_builder_parameters$na.action,
-                model = tree_builder_parameters$model,
-                control = tree_builder_parameters$control )
+    fit <- party::mob( formula__,
+                       data = df__,
+                       weights = tree_builder_parameters$weights,
+                       na.action = tree_builder_parameters$na.action,
+                       model = tree_builder_parameters$model,
+                       control = tree_builder_parameters$control )
     
     mob__ <- new( "MOB", tree = fit, data = df__, parameters = tree_builder_parameters )
 
@@ -306,13 +307,14 @@ get_party_subgroup <- function( tree, node_id ){
 #' @param digits Number of digits for rounding.
 #' @return A data.frame containing a parsed tree.
 #' @examples
-#' suppressMessages( require( party ) )
+#' requireNamespace( "party", quietly = TRUE )
+#' requireNamespace( "modeltools", quietly = TRUE )
 #' ## From party::ctree() examples:
 #' set.seed(290875)
 #' ## regression
 #' airq <- subset(airquality, !is.na(Ozone))
-#' airct <- ctree(Ozone ~ ., data = airq, 
-#'                controls = ctree_control(maxsurrogate = 3))
+#' airct <- party::ctree(Ozone ~ ., data = airq, 
+#'                controls = party::ctree_control(maxsurrogate = 3))
 #' 
 #' ## Parse the results into a new data.frame
 #' ex1 <- parse_party( airct )
@@ -330,10 +332,10 @@ get_party_subgroup <- function( tree, node_id ){
 #' 
 #' ## partition the linear regression model medv ~ lstat + rm
 #' ## with respect to all remaining variables:
-#' fmBH <- mob( medv ~ lstat + rm | zn + indus + chas + nox + age + 
+#' fmBH <- party::mob( medv ~ lstat + rm | zn + indus + chas + nox + age + 
 #'              dis + rad + tax + crim + b + ptratio,
-#'              control = mob_control(minsplit = 40), data = BostonHousing, 
-#'              model = linearModel )
+#'              control = party::mob_control(minsplit = 40), data = BostonHousing, 
+#'              model = modeltools::linearModel )
 #'
 #' ## Parse the results into a new data.frame
 #' ex2 <- parse_party( fmBH )
@@ -344,7 +346,8 @@ parse_party <- function( tree,
                          include_subgroups = FALSE,
                          digits = NULL ){
 
-  suppressMessages( require( party ) )
+  requireNamespace( "party", quietly = TRUE )
+  requireNamespace( "modeltools", quietly = TRUE )
 
   # If the input tree is of one of the container classes extract components
   if( class( tree ) %in% c("CTree","MOB") ){

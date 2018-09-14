@@ -254,13 +254,13 @@ TSDT <- function( response = NULL,
       stop( 'ERROR: tree_builder must be one of {rpart,ctree,mob}' )
   
   if( tree_builder == 'rpart'){
-    suppressMessages( require( rpart ) )
+    requireNamespace( "rpart", quietly = TRUE )
   }else if( tree_builder %in% c('ctree','mob') ){
-    suppressMessages( require( party ) )
+    requireNamespace( "party", quietly = TRUE )
   }
   
   if( n_cpu > 1 ){
-    suppressMessages( require( parallel ) )
+    requireNamespace( "parallel", quietly = TRUE )
     RNGkind( kind = "L'Ecuyer-CMRG" )
     mc.reset.stream()
   }
@@ -317,7 +317,7 @@ TSDT <- function( response = NULL,
       response <- binary_transform( response )
   
   if( response_type == "survival" )
-      suppressMessages( require( survival ) )
+      requireNamespace( "survival", quietly = TRUE )
 
 
   ## Populate default desirable_response
@@ -561,7 +561,7 @@ TSDT <- function( response = NULL,
   }else if( tree_builder == "ctree" ){
     
     if( "controls" %nin% names( tree_builder_parameters ) )
-        tree_builder_parameters$controls <- ctree_control()
+        tree_builder_parameters$controls <- party::ctree_control()
     
     tree_builder_parameters$controls@tgctrl@maxdepth <- as.integer( maxdepth )
     

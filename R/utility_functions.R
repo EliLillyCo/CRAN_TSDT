@@ -167,6 +167,10 @@ unpack_args <- function( args ){
 
 # Return vector of column indices of factor columns
 factor_cols <- function( df ){
+
+  ## Create NULL placeholders to prevent NOTE in R CMD check
+  x <- NULL
+  
   return( which( sapply( x[,1:NCOL(x)], is.factor ) ) )
 }
 
@@ -297,7 +301,7 @@ parse_subgroup <- function( subgroup, logic ){
 # Example:  X1<0.5 & X<0.6 should be collapsed to X1<0.5
 collapse_redundant_splits <- function( subgroup ){
 
-  suppressMessages( require( hash ) )
+  requireNamespace( "hash", quietly = TRUE )
   
   LT_HASH <- hash()     # splits with <
   LE_HASH <- hash()     # splits with <=
@@ -314,6 +318,10 @@ collapse_redundant_splits <- function( subgroup ){
     # Populate LE_HASH if split contains <=
     if( grepl( pattern = "<=", sg ) ){
 
+      ## Create NULL placeholders to prevent NOTE in R CMD check
+      SplitVariable <- NULL
+      SplitValue <- NULL
+      
       unpack_args( parse_subgroup( subgroup = sg, logic = '<=' ) )
       
       if( has.key( SplitVariable, LE_HASH ) )

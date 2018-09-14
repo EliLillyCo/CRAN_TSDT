@@ -281,6 +281,10 @@ treatment_effect <- function( data,
 desirable_response_proportion <- function( data,
                                           scoring_function_parameters = NULL ){
 
+  ## Create NULL placeholders to prevent NOTE in R CMD check
+  desirable_response <- NULL
+  trt_control <- NULL
+  
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
   
@@ -330,7 +334,7 @@ desirable_response_proportion <- function( data,
 #' @examples
 #' N <- 200
 #' require( survival )
-#' df <- data.frame( y = Surv( runif( min = 0, max = 20, n = N ),
+#' df <- data.frame( y = survival::Surv( runif( min = 0, max = 20, n = N ),
 #'                             sample( c(0,1), size = N, prob = c(0.2,0.8), replace = TRUE ) ),
 #'                   trt = sample( c('Control','Experimental'), size = N,
 #'                                 prob = c(0.4,0.6), replace = TRUE ) )
@@ -352,7 +356,7 @@ desirable_response_proportion <- function( data,
 survival_time_quantile <- function( data,
                                     scoring_function_parameters = NULL ){ 
   
-  suppressMessages( require( survival ) )
+  requireNamespace( "survival", quietly = TRUE )
   
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
@@ -384,7 +388,7 @@ survival_time_quantile <- function( data,
   response <- get_y( data, scoring_function_parameters )
   
   if( class( response ) != "Surv" )
-      response <- Surv( response )
+      response <- survival::Surv( response )
   
   trt <- get_trt( data, scoring_function_parameters )
 
@@ -398,7 +402,7 @@ survival_time_quantile <- function( data,
     # It is neccessary to re-create the Surv object after subsetting
     surv_time <- eval( parse( text = paste0( 'response[ as.character( trt ) == "', trt_arm, '","time"]' ) ) )
     surv_status <- eval( parse( text = paste0( 'response[ as.character( trt ) == "', trt_arm, '","status"]' ) ) )
-    response <- Surv( surv_time, surv_status )
+    response <- survival::Surv( surv_time, surv_status )
   }
 
   surv_formula_y <- 'response ~ '
@@ -407,11 +411,11 @@ survival_time_quantile <- function( data,
   
   # Compute survival model
   if( survival_model %in% COXPH_MODELS ){
-    surv <- survfit( coxph( formula = SURV_FORMULA ), se.fit = FALSE, control = coxph.control( iter.max = 1E4 ) )
+    surv <- survival::survfit( coxph( formula = SURV_FORMULA ), se.fit = FALSE, control = survival::coxph.control( iter.max = 1E4 ) )
   }else if( survival_model %in% SURVFIT_MODELS ){
-    surv <- survfit( formula = SURV_FORMULA, se.fit = FALSE, type = survival_model )
+    surv <- survival::survfit( formula = SURV_FORMULA, se.fit = FALSE, type = survival_model )
   }else if( survival_model %in% SURVREG_MODELS ){
-    surv <- survreg( formula = SURV_FORMULA, dist = survival_model, control = survreg.control( iter.max = 1E3 ) )
+    surv <- survival::survreg( formula = SURV_FORMULA, dist = survival_model, control = survival::survreg.control( iter.max = 1E3 ) )
   }
   
   # Get survival function quantile for specified percentile
@@ -451,9 +455,9 @@ survival_time_quantile <- function( data,
 #' @param scoring_function_parameters named list of scoring function control parameters
 #' @return A difference in a survival time quantile across treatment arms.
 #' @examples
-#' require( survival )
+#' requireNamespace( "survival", quiet = TRUE )
 #' N <- 200
-#' df <- data.frame( y = Surv( runif( min = 0, max = 20, n = N ),
+#' df <- data.frame( y = survival::Surv( runif( min = 0, max = 20, n = N ),
 #'                             sample( c(0,1), size = N, prob = c(0.2,0.8), replace = TRUE ) ),
 #'                   trt = sample( c('Control','Experimental'), size = N,
 #'                                 prob = c(0.4,0.6), replace = TRUE ) )
@@ -538,7 +542,7 @@ diff_survival_time_quantile <- function( data,
 mean_deviance_residuals <- function( data,
                                      scoring_function_parameters = NULL ){
 
-  suppressMessages( require( survival ) )
+  requireNamespace( "survival", quietly = TRUE )
 
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
@@ -566,7 +570,7 @@ mean_deviance_residuals <- function( data,
   # get_y(). Cast it back to Surv by wrapping the return value in Surv().
   response <- get_y( data, scoring_function_parameters )
   if( class( response ) != "Surv" )
-      response <- Surv( response )
+      response <- survival::Surv( response )
   
   trt <- get_trt( data, scoring_function_parameters )
 
@@ -593,10 +597,10 @@ mean_deviance_residuals <- function( data,
 
   # Compute survival model
   if( survival_model %in% COXPH_MODELS )
-    surv <- coxph( formula = SURV_FORMULA, control = coxph.control( iter.max = 1E3 )  )
+    surv <- survival::coxph( formula = SURV_FORMULA, control = survival::coxph.control( iter.max = 1E3 )  )
      
   else if( survival_model %in% SURVREG_MODELS )
-    surv <- survreg( formula = SURV_FORMULA, dist = survival_model, control = survreg.control( iter.max = 1E3 ) )
+    surv <- survival::survreg( formula = SURV_FORMULA, dist = survival_model, control = survival::survreg.control( iter.max = 1E3 ) )
   
   # Get deviance residuals
   deviance_residuals <- residuals( surv, type  = "deviance" )
@@ -636,7 +640,7 @@ mean_deviance_residuals <- function( data,
 #' @export
 diff_mean_deviance_residuals <- function( data,
                                          scoring_function_parameters = NULL ){
-  suppressMessages( require( survival ) )
+  requireNamespace( "survival", quietly = TRUE )
   
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
@@ -676,8 +680,9 @@ diff_mean_deviance_residuals <- function( data,
 #' @return Difference in restricted mean survival time across treatment arms.
 #' @export
 diff_restricted_mean_survival_time <- function( data,
-                                                scoring_function_parameters = NULL ){
-  suppressMessages( require( survRM2 ) )
+                                               scoring_function_parameters = NULL ){
+  
+  requireNamespace( "survRM2", quietly = TRUE )
   
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
@@ -686,7 +691,7 @@ diff_restricted_mean_survival_time <- function( data,
   response <- get_y( data, scoring_function_parameters )
   
   if( class( response ) != "Surv" )
-      response <- Surv( response )
+      response <- survival::Surv( response )
   
   # Get treatment variable and control and experimental treatment values
   trt <- get_trt( data, scoring_function_parameters )
@@ -726,7 +731,7 @@ hazard_ratio <- function( data,
   response <- get_y( data, scoring_function_parameters )
   
   if( class( response ) != "Surv" )
-      response <- Surv( response )
+      response <- survival::Surv( response )
   
   # Get treatment variable and control and experimental treatment values
   trt <- get_trt( data, scoring_function_parameters )
@@ -740,7 +745,7 @@ hazard_ratio <- function( data,
   ## If the coxph model successfully completes return the hazard ratio value.
   ## If the model returns a warning (e.g. if the model does not converge) return
   ## NA. If the model returns an error pass the error to the user.
-  hazard_ratio__ <- tryCatch( exp( coxph( response ~ trt )$coefficients[1] ),
+  hazard_ratio__ <- tryCatch( exp( survival::coxph( response ~ trt )$coefficients[1] ),
                               warning = function(w){return(NA)},
                               error = function(e){stop(e)})
   
