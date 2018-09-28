@@ -191,7 +191,7 @@ get_scoring_function <- function( scoring_function = NULL,
                                   scoring_function_parameters = NULL ){
 
   ## Create NULL placeholders to prevent NOTE in R CMD check
-  response_type <- NULL
+  response_type <- NULL;rm( response_type )
   
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
@@ -278,7 +278,7 @@ get_superior_subgroups <- function( splits,
 
 
   ## Create NULL placeholders to prevent NOTE in R CMD check
-  response_type <- NULL
+  response_type <- NULL;rm( response_type )
   
   unpack_args( scoring_function_parameters )
 
@@ -376,9 +376,9 @@ get_score <- function( splits,
 
 
   ## Create NULL placeholders to prevent NOTE in R CMD check
-  scoring_function_name <- NULL
-  trt_control <- NULL
-  trt_var <- NULL
+  scoring_function_name <- NULL;rm( scoring_function_name )
+  trt_control <- NULL;rm( trt_control )
+  trt_var <- NULL;rm( trt_var )
   
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
@@ -471,20 +471,19 @@ populate_tsdt_samples <- function( samples,
                                    tree_builder_parameters ){
 
   ## Create NULL placeholders to prevent NOTE in R CMD check
-  y_var <- NULL
-  covariate_vars <- NULL
-  trt_var <- NULL
-  INVALID_TREE__ <- NULL
-  Superior_Inbag_Subgroup <- NULL
+  y_var <- NULL;rm( y_var )
+  covariate_vars <- NULL;rm( covariate_vars )
+  trt_var <- NULL;rm( trt_var )
+  INVALID_TREE__ <- NULL;rm( INVALID_TREE__ )
+  Superior_Inbag_Subgroup <- NULL;rm( Superior_Inbag_Subgroup )
   
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
 
   if( !is.null( tree_builder_parameters ) )
       unpack_args( tree_builder_parameters )
-
-
-  if( is.null( trt_var ) )
+  
+  if( exists( "trt_var" ) && is.null( trt_var ) )
       rm( trt_var )
   
   OverallInternalConsistency <- NULL
@@ -731,11 +730,11 @@ get_null_scores <- function( n_permutations,
                             trace ){
   
   ## Create NULL placeholders to prevent NOTE in R CMD check
-  trt_control <- NULL
-  OverallExternalConsistency <- NULL
-  OverallInternalConsistency <- NULL
-  Subgroup <- NULL
-  TSDT_SAMPLES <- NULL
+  trt_control <- NULL;rm( trt_control )
+  OverallExternalConsistency <- NULL;rm( OverallExternalConsistency )
+  OverallInternalConsistency <- NULL;rm( OverallInternalConsistency ) 
+  Subgroup <- NULL;rm( Subgroup )
+  TSDT_SAMPLES <- NULL;rm( TSDT_SAMPLES )
   
   if( !is.null(  scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
@@ -864,8 +863,8 @@ get_y <- function( data,
                   scoring_function_parameters = NULL ){
 
   ## Create NULL placeholders to prevent NOTE in R CMD check
-  y_var <- NULL
-  y_col <- NULL
+  y_var <- NULL;rm( y_var )
+  y_col <- NULL;rm( y_col )
   
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
@@ -932,8 +931,8 @@ get_trt <- function( data,
                      scoring_function_parameters = NULL ){
 
   ## Create NULL placeholders to prevent NOTE in R CMD check
-  trt_var <- NULL
-  trt_col <- NULL
+  trt_var <- NULL;rm( trt_var )
+  trt_col <- NULL;rm( trt_col )
   
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
@@ -941,8 +940,14 @@ get_trt <- function( data,
   if( exists( "trt_var" ) )
       trt <- data[,c(trt_var)]
   
-  else if( exists( "trt_col" ) )
-      trt <- data[,trt_col]
+  else if( exists( "trt_col" ) ){
+    ## cat( "got here\n" )
+    ## print( data )
+    ## print( trt_col )
+    ## flush.console()
+    
+    trt <- data[,trt_col]
+  }
   
   else if( "trt" %in% names( data ) ) {
     # special case: user explicitely defined trt as NULL
@@ -958,6 +963,8 @@ get_trt <- function( data,
       trt <- NULL
   return( trt )
 }
+
+##################################################
 
 #' @title get_covariates
 #' @description Returns the covariate variables in the in-bag or out-of-bag data.
@@ -992,8 +999,8 @@ get_covariates <- function( data,
                             scoring_function_parameters ){
 
   ## Create NULL placeholders to prevent NOTE in R CMD check
-  covariate_vars <- NULL
-  covariate_cols <- NULL
+  covariate_vars <- NULL;rm( covariate_vars )
+  covariate_cols <- NULL;rm( covariate_cols )
     
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )

@@ -202,7 +202,7 @@
 #'             desirable_response = "increasing",
 #'             n_samples = 1,
 #'             n_permutations = 10,
-#'             rootcompete = 2,
+#'             rootcompete = 1,
 #'             maxdepth = 2 )
 #' 
 #' ## Two-arm TSDT
@@ -215,7 +215,7 @@
 #'             min_subgroup_n_control = 10,
 #'             min_subgroup_n_trt = 20,
 #'             maxdepth = 2,
-#'             rootcompete = 2,
+#'             rootcompete = 1,
 #'             n_samples = 5,
 #'             n_permutations = 10 )
 #' @export
@@ -256,6 +256,26 @@ TSDT <- function( response = NULL,
   
   if( tree_builder %nin% c('rpart','ctree','mob') )
       stop( 'ERROR: tree_builder must be one of {rpart,ctree,mob}' )
+
+  ## validate covariate names
+  invalid_names <- NULL
+  for( k in names( covariates ) ){
+    chars <- strsplit( split = "", k )[[1]]
+    if( any( chars %nin% c( LETTERS, letters, 0:9, '.', '_' ) ) ){
+      invalid_names <- c( invalid_names, k )
+    }
+    rm( chars )
+  }
+  
+  if( !is.null( invalid_names ) ){
+    msg__ <- paste0( 'ERROR: TSDT requires alphanumeric covariate names. The ',
+                    'following covariate names are invalid:\n' )
+    
+    msg__ <- paste0( msg__, paste( invalid_names, sep = "", collapse = "\n" ) )
+    
+    stop( msg__ )
+  }
+
   
   if( tree_builder == 'rpart'){
     requireNamespace( "rpart", quietly = TRUE )

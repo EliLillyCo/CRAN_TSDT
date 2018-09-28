@@ -261,7 +261,7 @@ party_parents <- function( tree, node_id ){
 get_party_subgroup <- function( tree, node_id ){
 
   ## Create NULL placeholders to prevent NOTE in R CMD check
-  NodeID <- NULL
+  NodeID <- NULL;rm( NodeID )
   
   if( node_id %nin% tree$NodeID )
       stop( "ERROR: node_id not found in tree" )
@@ -353,8 +353,8 @@ parse_party <- function( tree,
   requireNamespace( "modeltools", quietly = TRUE )
 
   ## Create NULL placeholders to prevent NOTE in R CMD check
-  node <- NULL
-  NodeID <- NULL
+  node <- NULL;rm( node )
+  NodeID <- NULL;rm( NodeID )
   
   # If the input tree is of one of the container classes extract components
   if( class( tree ) %in% c("CTree","MOB") ){

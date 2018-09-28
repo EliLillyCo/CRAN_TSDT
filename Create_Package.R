@@ -123,8 +123,6 @@ cmd8 <- paste0( 'rm -rf ', paste( ProjectPath, 'TSDT/man/', HELP_FILES_TO_REMOVE
 cat( "Remove unwanted help files\n" )
 system( cmd8 )
 
-
-
 #################################################################################
 # Generate help files and build package                                         #
 #################################################################################

@@ -9,7 +9,7 @@
 scoring_function_wrapper <- function( scoring_function_name, data, scoring_function_parameters = NULL ){
 
   ## Create NULL placeholders to prevent NOTE in R CMD check
-  result <- NULL
+  result <- NULL;rm( result )
   
   scoring_function_text <- paste0( 'result <- ', scoring_function_name, '( data' )
 
@@ -59,7 +59,7 @@ mean_response <- function( data,
                            scoring_function_parameters = NULL ){
 
   ## Create NULL placeholders to prevent NOTE in R CMD check
-  trt_arm <- NULL
+  trt_arm <- NULL;rm( trt_arm )
   
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
@@ -121,7 +121,7 @@ quantile_response <- function( data,
                                scoring_function_parameters = NULL ){
 
   ## Create NULL placeholders to prevent NOTE in R CMD check
-  trt_arm  <- NULL
+  trt_arm  <- NULL;rm( trt_arm )
   
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
@@ -194,7 +194,7 @@ diff_quantile_response <- function( data,
   trt <- get_trt( data, scoring_function_parameters )
   
   if( !any( trt == trt_control ) )
-      stop( paste0( 'ERROR: trt_control value (', trt_control, ') not found in trt variable' ) )
+    stop( paste0( 'ERROR: trt_control value (', trt_control, ') not found in trt variable' ) )
   
   scoring_function_parameters$trt_arm <- trt_control
   quantile_control <- quantile_response( data, scoring_function_parameters )
@@ -271,16 +271,16 @@ treatment_effect <- function( data,
 #' @examples
 #' N <- 50
 #' 
-#' data <- data.frame( binary_response = numeric(N),
+#' data <- data.frame( y = numeric(N),
 #'                     trt = character(N) )
 #' 
-#' data$binary_response <- sample( c(0,1), size = N, prob = c(0.5,0.5), replace = TRUE )
+#' data$y <- sample( c(0,1), size = N, prob = c(0.5,0.5), replace = TRUE )
 #' data$trt <- sample( c('Control','Experimental'), size = N, prob = c(0.4,0.6), replace = TRUE )
 #' 
 #' ## Compute desirable response proportion for all data with increasing
 #' ## desirable response (i.e. larger response value is better)
 #' desirable_response_proportion( data, list( desirable_response = 'increasing' ) )
-#' mean( data$binary_response ) # Function return value should match this value
+#' mean( data$y ) # Function return value should match this value
 #' 
 #' ## Compute desirable response proportion for Experimental treatment arm only
 #' ## with decreasing desirable response (i.e. smaller response value is better).
@@ -291,11 +291,17 @@ desirable_response_proportion <- function( data,
                                            scoring_function_parameters = NULL ){
 
   ## Create NULL placeholders to prevent NOTE in R CMD check
-  desirable_response <- NULL
-  trt_control <- NULL
+  desirable_response <- NULL;rm( desirable_response )
+  trt_control <- NULL;rm( trt_control )
   
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
+
+  if( is.null( desirable_response ) )
+      rm( desirable_response )
+
+  if( exists( "trt_control" ) && is.null( trt_control ) )
+      rm( trt_control )
   
   response <- binary_transform( get_y( data, scoring_function_parameters ) )
   trt <- get_trt( data, scoring_function_parameters )
@@ -368,7 +374,7 @@ survival_time_quantile <- function( data,
   requireNamespace( "survival", quietly = TRUE )
   
   ## Create NULL placeholders to prevent NOTE in R CMD check
-  trt_control <- NULL
+  trt_control <- NULL;rm( trt_control )
   
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )
@@ -557,7 +563,7 @@ mean_deviance_residuals <- function( data,
   requireNamespace( "survival", quietly = TRUE )
 
   ## Create NULL placeholders to prevent NOTE in R CMD check
-  trt_control <- NULL
+  trt_control <- NULL;rm( trt_control )
   
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )

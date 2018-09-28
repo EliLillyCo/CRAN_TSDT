@@ -118,6 +118,7 @@ setMethod( f = "set_cutpoints", signature = "TSDT_CutpointDistribution",
 #' @docType methods
 #' @rdname get_cutpoints-methods
 #' @examples
+#' \dontrun{
 #' example( TSDT )
 #' ## You can access the cutpoints slot of a TSDT object directly
 #' ex2@cutpoints
@@ -125,7 +126,6 @@ setMethod( f = "set_cutpoints", signature = "TSDT_CutpointDistribution",
 #' ## You can also use the accessor method
 #' get_cutpoints( ex2@cutpoints, subgroup = 'X1<xxxxx' )
 #' 
-#' \dontrun{
 #' ## Retrieving a compound subgroup defined on multiple splits
 #' get_cutpoints( ex2, subgroup = 'X1<xxxxx & X1>=xxxxx' )
 #'
