@@ -287,9 +287,12 @@ get_competitors <- function( splits,
       # Populate 2nd and 3rd rows of competitor split data.frame
       competitor_splits__$SplitVariable <- competitor_splits__$SplitVariable[[1]]
       competitor_splits__$SplitValue <- competitor_splits__$SplitValue[[1]]
+      
+      # Get left and right children of root node
+      competitor_splits__ <- competitor_splits__[competitor_splits__$NodeID %in% c(2,3),]
+      competitor_splits__$LeftChild <- NA
+      competitor_splits__$RightChild <- NA
 
-      # Remove root node row, leaving the subgroup rows from left and right child nodes
-      competitor_splits__ <- competitor_splits__[-1,]
       
       COMPETITORS <- rbind( COMPETITORS, competitor_splits__ )
       

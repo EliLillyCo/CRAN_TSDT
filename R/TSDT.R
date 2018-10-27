@@ -9,7 +9,7 @@
 #' @title Treatment-Specific Subgroup Detection Tool
 #' 
 #' @description
-#' Employs TSDT to identify subgroups with superior response.
+#' Employs TSDT to identify subjects with enhanced treatment effect in controlled trials.
 #'  
 #' @details
 #' The Treatment-Specific Subgroup Detection Tool (TSDT) creates several
@@ -81,11 +81,15 @@
 #' rpart. Other possible values include ctree and mob (both from the party
 #' package). (optional)
 #' @param tree_builder_parameters A named list of parameters to pass to the
-#' tree-builder. (optional)
+#' tree-builder. The default tree-builder is rpart. In this case, the parameters
+#' passed here would be rpart parameters. Examples might include parameters such
+#' as control, cost, weights, na.action, etc. Consult the rpart documentation (or
+#' the documentation of your selected tree-builder) for a complete list. (optional)
 #' @param covariates A data.frame containing the covariates.
 #' @param trt Treatment variable. Only needed if there are two treatment arms.
 #' (optional)
-#' @param trt_control Value for treatment control arm. (defaults to 0)
+#' @param trt_control Value for treatment control arm. This parameter is relevant
+#' only for two-arm data. (defaults to 0)
 #' @param permute_method Indicates whether only the response variable should be
 #' permuted in the computation of the p-value, or the response and treatment
 #' variable should be permuted together (preserving the treatment-response
@@ -97,10 +101,12 @@
 #' scheme is response_one_arm. As noted in the documentation for the permute_arm
 #' parameter is to permute the non-control arm. Taken together, this implies the
 #' default permutation method for p-value computation is to permute the response
-#' in the non-control arm only. (optional).
+#' in the non-control arm only. For one-arm data only the response is permuted.
+#' (optional)
 #' @param permute_arm Which treatment arm should be permuted? Defaults to the
 #' experimental treatment arm -- i.e. the treatment arm not matching the value
-#' provided in trt_control. (optional)
+#' provided in trt_control. For one-arm data only the response is permuted.
+#' (optional)
 #' @param n_samples Number of TSDT_Samples to draw.
 #' @param desirable_response Direction of desirable response. Valid values are
 #' 'increasing' or 'decreasing'. The default value is 'increasing'. It is
@@ -119,7 +125,14 @@
 #' subset when sampling_method is subsample.
 #' @param scoring_function Scoring function to compute treatment effect. Links to
 #' several possible scoring functions are provided in the See Also section below.
-#' @param scoring_function_parameters Parameters passed to scoring function.
+#' @param scoring_function_parameters Parameters passed to the scoring function.
+#' As an example, the scoring function quantile_response takes a parameter
+#' "percentile" which indicates the desired percentile of the response distribution.
+#' Thus, if the median response is desired, this parameter could be set as follows:
+#' scoring_function_parameters = list( percentile = 0.50 ). Most of the built-in
+#' scoring functions have sensible defaults for the scoring function parameters
+#' so it is not necessary to specify them explicitly in the call to TSDT. But this
+#' parameter could be very useful for user-defined custom scoring functions.
 #' (optional)
 #' @param inbag_score_margin Required margin above overall mean for a subgroup to
 #' be considered superior. If a subgroup mean must be 10\% larger than the overall
@@ -128,7 +141,7 @@
 #' or zero.
 #' @param oob_score_margin Similar to inbag_score_margin but for classifying
 #' out-of-bag subgroups as superior.
-#' @param eps Tolerance value for floating-point precision.
+#' @param eps Tolerance value for floating-point precision. The default is 1E-5. (optional)
 #' @param min_subgroup_n_control Minimum number of Control arm observations in an
 #' in-bag subgroup. A value greater than or equal to one will be interpreted as
 #' the required minimum number of observations. A value between zero and one
@@ -166,9 +179,11 @@
 #' @param maxdepth Maximum depth of trees.
 #' @param rootcompete Number of competitor splits to retain for root node split.
 #' @param strength_cutpoints Cutpoints for permuted p-values to classify a
-#' subgroup as Strong, Moderate, Weak, or Not Confirmed. (optional)
+#' subgroup as Strong, Moderate, Weak, or Not Confirmed. The default cutpoints are
+#' 0.10, 0.20, and 0.30 for Strong, Moderate, and Weak subgroups, respectively. (optional)
 #' @param n_permutations Number of permutations to compute for adjusted p-value.
-#' Defaults to zero (no p-value computation).
+#' Defaults to zero (no p-value computation). If p-values are desired, it is
+#' recommended to use at least 500 permutations.
 #' @param n_cpu Number of CPUs to use. Defaults to 1.
 #' @param trace Report number of permutations computed as algorithm proceeds.
 #' @seealso \link{mean_response}, \link{quantile_response},
@@ -179,8 +194,12 @@
 #' \linkS4class{TSDT}, \link[rpart]{rpart}, \link[party]{ctree}, \link[party]{mob}
 #' @return An object of class \linkS4class{TSDT}
 #' @author Brian Denton \email{denton_brian_david@@lilly.com},
-#' Chakib Battioui \email{battioui_chakib@@lilly.com}
-#' @references TODO: Link to TSDT Paper.
+#' Chakib Battioui \email{battioui_chakib@@lilly.com},
+#' Lei Shen \email{shen_lei@@lilly.com}
+#' @references
+#' Battioui, C., Shen, L., Ruberg, S., (2014). A Resampling-based Ensemble Tree Method to Identify Patient Subgroups with Enhanced Treatment Effect. JSM proceedings, 2014
+#' 
+#' Shen, L., Battioui, C., Ding, Y., (2013). Chapter "A Framework of Statistical methods for Identification of Subgroups with Differential Treatment Effects in Randomized Trials" in the book "Applied Statistics in Biomedicine and Clinical Trials Design" 
 #' @examples
 #' ## Create example data for constructing TSDT object
 #' N <- 200
@@ -194,14 +213,21 @@
 #' covariates$X2 <- X2
 #' covariates$X3 <- factor( X3 )
 #' covariates$X4 <- factor( X4 )
+#'
+#'
+#' ## In the following examples n_samples and n_permutations are set to small
+#' ## values so the examples complete quickly. The intent here is to provide
+#' ## a small functional example to demonstrate the structure of the output. In
+#' ## a real-world use of TSDT these values should be at least 100 and 500,
+#' ## respectively.
 #' 
 #' ## Single-arm TSDT
 #' ex1 <- TSDT( response = continuous_response,
 #'             covariates = covariates[,1:4],
 #'             inbag_score_margin = 0,
 #'             desirable_response = "increasing",
-#'             n_samples = 1,
-#'             n_permutations = 10,
+#'             n_samples = 5,       ## use value >= 100 in real world application
+#'             n_permutations = 5,  ## use value >= 500 in real world application
 #'             rootcompete = 1,
 #'             maxdepth = 2 )
 #' 
@@ -216,8 +242,8 @@
 #'             min_subgroup_n_trt = 20,
 #'             maxdepth = 2,
 #'             rootcompete = 1,
-#'             n_samples = 5,
-#'             n_permutations = 10 )
+#'             n_samples = 5,      ## use value >= 100 in real world application
+#'             n_permutations = 5 ) ## use value >= 500 in real world application
 #' @export
 TSDT <- function( response = NULL,
                   response_type = NULL,
@@ -346,12 +372,12 @@ TSDT <- function( response = NULL,
 
   ## Populate default desirable_response
   if( is.null( desirable_response ) ){
-    if( substitute( scoring_function ) %nin% c('mean_deviance_residuals','diff_mean_deviance_residuals') ){
-      desirable_response <- 'increasing'
-    }else{
-      cat(         "NOTE: setting desirable_response = 'decreasing'\n" )
-      cat( paste0( "      See help for ", substitute( scoring_function ), '\n' ) )
+    if( !is.null( scoring_function) && substitute( scoring_function ) %in% c('mean_deviance_residuals','diff_mean_deviance_residuals') ){
       desirable_response <- 'decreasing'
+      cat( "NOTE: setting desirable_response = 'decreasing'\n" )
+      cat( paste0( " See help for ", substitute( scoring_function ), '\n' ) )
+    }else{
+      desirable_response <- 'increasing'
     }
   }
   
@@ -1052,7 +1078,7 @@ TSDT <- function( response = NULL,
 
       for( p in 1:n_cpu ){
       
-        mcparallel({
+        parallel::mcparallel({
           
           NULL_SCORES <- get_null_scores( n_permutations = ceiling(n_permutations/n_cpu),
                                           response = response,
@@ -1080,7 +1106,7 @@ TSDT <- function( response = NULL,
         })
       }
       
-      JOBS <- mccollect()
+      JOBS <- parallel::mccollect()
       
       NULL_SCORES <- NULL
     

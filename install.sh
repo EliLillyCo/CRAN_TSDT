@@ -7,7 +7,8 @@
 # DESCRIPTION: 
 #################################################################################
 
-R_LIBS=/home/c065288/R/x86_64-unknown-linux-gnu-library
+#R_LIBS=/home/c065288/R/x86_64-unknown-linux-gnu-library
+R_LIBS=/home/c065288/Projects/CRAN_TSDT/packrat/lib/x86_64-pc-linux-gnu/3.5.0
 TSDT=/home/c065288/Projects/CRAN_TSDT/TSDT_*.tar.gz
 
 export R_LIBS=$R_LIBS

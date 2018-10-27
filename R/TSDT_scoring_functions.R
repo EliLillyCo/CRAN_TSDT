@@ -183,7 +183,7 @@ quantile_response <- function( data,
 #' max( df$y[df$trt!='Control'] ) -  max( df$y[df$trt=='Control'] )
 #' @export
 diff_quantile_response <- function( data,
-                                   scoring_function_parameters = NULL ){
+                                    scoring_function_parameters = NULL ){
   
   if( !is.null( scoring_function_parameters ) )
       unpack_args( scoring_function_parameters )

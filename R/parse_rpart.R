@@ -7,9 +7,6 @@
 #              output to extract subgroups.
 #################################################################################
 
-source( "utility_functions.R" )
-source( "tree_functions.R" )
-
 #' @title rpart_nodes
 #' @description Extract node information from an rpart.object.
 #' @details Information about nodes and splits returned in an rpart.object

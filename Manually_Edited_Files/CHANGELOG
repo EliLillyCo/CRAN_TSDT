@@ -284,4 +284,6 @@ Changes from Version 0.0.16 to 0.0.17 [08-Nov-2017]
   to CustomPartition, removing logic for logging, and removing code for
   sourcing other scripts.
 
-
+Changes from Version 0.0.17 to 0.1.0 [29-Sep-2018]
+	
+* Version for initial release on CRAN. Implement changes to pass CRAN checks.
