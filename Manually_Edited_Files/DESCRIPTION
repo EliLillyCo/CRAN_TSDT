@@ -2,11 +2,10 @@ Package: TSDT
 Type: Package
 Title: Treatment-Specific Subgroup Detection Tools
 Version: 1.0.0
-Date: 2018-10-27
+Date: 2018-10-29
 Author: Chakib Battioui, Brian Denton, Lei Shen
 Maintainer: Brian Denton <denton_brian_david@lilly.com>
-Description: Implements a method for identifying subgroups with
-             superior response relative to the overall sample.
+Description: Implements a method for identifying subgroups with superior response relative to the overall sample.
 Imports: methods, mlbench, hash, party, rpart, survival, survRM2, stats, modeltools, utils, parallel
 LazyLoad: no
 License: GPL (>= 2)
