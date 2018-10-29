@@ -9,8 +9,8 @@
 #' @title Treatment-Specific Subgroup Detection Tool
 #' 
 #' @description
-#' Implements a method to identify subjects with enhanced treatment effect in
-#' controlled trials.
+#' Implements a method for identifying subgroups with superior response relative
+#' to the overall sample.
 #'  
 #' @details
 #' The Treatment-Specific Subgroup Detection Tool (TSDT) creates several

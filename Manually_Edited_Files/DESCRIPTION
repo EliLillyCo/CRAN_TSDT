@@ -1,6 +1,6 @@
 Package: TSDT
 Type: Package
-Title: Treatment-Specific Subgroup Detection Tools
+Title: Treatment-Specific Subgroup Detection Tool
 Version: 1.0.0
 Date: 2018-10-29
 Author: Chakib Battioui, Brian Denton, Lei Shen
