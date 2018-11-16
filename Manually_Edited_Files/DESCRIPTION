@@ -22,4 +22,6 @@ Description: Implements a method for identifying subgroups with superior respons
 Imports: methods, mlbench, hash, party, rpart, survival, survRM2, stats, modeltools, utils, parallel
 LazyLoad: no
 License: GPL (>= 2)
+URL: https://github.com/EliLillyCo/CRAN_TSDT
+BugReports: https://github.com/EliLillyCo/CRAN_TSDT/issues
 Encoding: UTF-8
