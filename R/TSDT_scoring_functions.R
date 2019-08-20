@@ -321,7 +321,12 @@ desirable_response_proportion <- function( data,
   # For computing the proportion only on the treatment arm
   else{
     response <- subset( response, trt != trt_control )
-    response <- subset( response, response == 1 )
+
+    if( desirable_response == "increasing" ){
+      response <- subset( response, response == 1 )
+    }else{ #decreasing
+      response <- subset( response, response == 0 )
+    }
     proportion <- length( response )/N 
   } 
   return( proportion )

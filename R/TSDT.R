@@ -322,6 +322,12 @@ TSDT <- function( response = NULL,
   # If trt provided make sure trt_control value exists in data
   if( !is.null( trt ) && !any( trt == trt_control ) )
       stop( "ERROR: trt_control value not found" )
+
+  ## If trt is NULL make sure other trt-related variables are also NULL
+  if( is.null( trt ) ){
+    trt_control <- NULL
+    permute_arm <- NULL
+  }
   
   # Remove records with missing response
   if( any( is.na( response ) ) ){

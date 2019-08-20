@@ -287,3 +287,10 @@ Changes from Version 0.0.16 to 0.0.17 [08-Nov-2017]
 Changes from Version 0.0.17 to 0.1.0 [29-Sep-2018]
 	
 * Version for initial release on CRAN. Implement changes to pass CRAN checks.
+
+Changes from Version 0.0.17 to 1.0.2 [20-Aug-2019]
+	
+* Set trt_control and permute_arm to NULL when trt is NULL
+	
+* Correct desirable_response_proportion when desirable_response is
+  decreasing
