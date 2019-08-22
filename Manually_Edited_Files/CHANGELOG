@@ -294,3 +294,24 @@ Changes from Version 0.0.17 to 1.0.2 [20-Aug-2019]
 	
 * Correct desirable_response_proportion when desirable_response is
   decreasing
+	
+Changes from Version 1.0.2 to 1.0.3 [21-Aug-2019]
+	
+* Correct desirable_response_proportion when desirable_response is
+  decreasing and trt_var does not exist
+	
+* Do not require subgroup mean response to be superior to overall mean
+  if scoring function is desirable_response_proportion.
+
+Changes from Version 1.0.3 to 1.0.4 [22-Aug-2019]	
+
+* Make mean_response the default scoring function for a binary response
+  single-arm model, and treatment_effect the default scoring function for a
+  binary response two-arm model.
+
+
+
+
+
+
+

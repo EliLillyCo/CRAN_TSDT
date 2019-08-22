@@ -202,22 +202,16 @@ get_scoring_function <- function( scoring_function = NULL,
   # Select scoring_function if none provided
   if( is.null( scoring_function ) ){
     
-    # Default scoring function for continuous response, single-arm is mean_response
-    if( response_type %in% "continuous" && !exists( "trt_var" ) ){
+    # Default scoring function for binary or continuous response, single-arm is mean_response
+    if( response_type %in% c("binary","continuous") && !exists( "trt_var" ) ){
       scoring_function <- mean_response
       scoring_function_name <- "mean_response"
     }
     
-    # Default scoring function for continuous response, two-arm is treatment_effect
-    else if( response_type %in% "continuous" && exists( "trt_var" ) ){
+    # Default scoring function for binary or continuous response, two-arm is treatment_effect
+    else if( response_type %in% c("binary","continuous") && exists( "trt_var" ) ){
       scoring_function <- treatment_effect
       scoring_function_name <- "treatment_effect"
-    }
-    
-    # Default scoring function for binary response is desirable_response_proportion
-    else if( response_type == "binary" ){
-      scoring_function <- desirable_response_proportion
-      scoring_function_name <- "desirable_response_proportion"
     }
 
     else if( response_type == "survival" ){
@@ -269,16 +263,14 @@ get_samples <- function( data, trt, trt_control, n_samples, sampling_method, inb
   }
 }
 
+
 get_superior_subgroups <- function( splits,
                                     desirable_response,
                                     inbag_score_margin,
                                     oob_score_margin,
                                     eps,
                                     scoring_function_parameters = NULL ){
-
-
-  ## Create NULL placeholders to prevent NOTE in R CMD check
-  response_type <- NULL;rm( response_type )
+  
   
   unpack_args( scoring_function_parameters )
 
@@ -291,6 +283,15 @@ get_superior_subgroups <- function( splits,
     oob_mean_response <- splits$OOB_Score
   }
 
+  ## If the scoring_function is in {desirable_response_proportion} then it is 
+  ## not necessary to also confirm the mean subgroup response is superior to the
+  ## mean overall response
+  if( gsub( pattern = '"', replacement = '', fixed = TRUE, scoring_function_parameters$scoring_function_name )
+     %in% c("desirable_response_proportion") ){
+    inbag_mean_response <- NULL
+    oob_mean_response <- NULL
+  }
+  
   # Identify superior in-bag subgroups                              
   inbag_superior_subgroup <- superior_subgroups( splits = splits,
                                                  mean_response = inbag_mean_response,
@@ -332,7 +333,6 @@ get_superior_subgroups <- function( splits,
   
   return( splits )
 }
-
 
 get_mean_response <- function( splits, data, trt, trt_control ){
 

@@ -189,10 +189,10 @@
 #' @param trace Report number of permutations computed as algorithm proceeds.
 #' @seealso \link{mean_response}, \link{quantile_response},
 #' \link{diff_quantile_response}, \link{treatment_effect},
-#' \link{desirable_response_proportion}, \link{survival_time_quantile},
-#' \link{diff_survival_time_quantile}, \link{mean_deviance_residuals},
-#' \link{diff_mean_deviance_residuals}, \link{diff_restricted_mean_survival_time},
-#' \linkS4class{TSDT}, \link[rpart]{rpart}, \link[party]{ctree}, \link[party]{mob}
+#' \link{survival_time_quantile}, \link{diff_survival_time_quantile},
+#' \link{mean_deviance_residuals}, \link{diff_mean_deviance_residuals},
+#' \link{diff_restricted_mean_survival_time}, \linkS4class{TSDT},
+#' \link[rpart]{rpart}, \link[party]{ctree}, \link[party]{mob}
 #' @return An object of class \linkS4class{TSDT}
 #' @author Brian Denton \email{denton_brian_david@@lilly.com},
 #' Chakib Battioui \email{battioui_chakib@@lilly.com},

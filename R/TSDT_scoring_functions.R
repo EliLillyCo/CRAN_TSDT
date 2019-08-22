@@ -256,81 +256,87 @@ treatment_effect <- function( data,
 }
 
 
-#' @title desirable_response_proportion
-#' @description Compute proportion of subjects that have a desirable (binary) response
-#' @details This function will compute the proportion of subjects for which
-#' the response indicates a desirable response. The response proportion can
-#' be computed for a single treatment arm only (if valued for trt_arm and trt
-#' are provided) or for all data passed to the function.
-#' @seealso link{TSDT}, \link{binary_transform}
-#' @param data data.frame containing response data
-#' @param scoring_function_parameters named list of scoring function control parameters
-#' @return Proportion of (binary) response values that have a desirable value.
-#' The desirable value is 1 if desirable_response = 'increasing' and the
-#' desirable value is 0 if desirable_response = 'decreasing'.
-#' @examples
-#' N <- 50
-#' 
-#' data <- data.frame( y = numeric(N),
-#'                     trt = character(N) )
-#' 
-#' data$y <- sample( c(0,1), size = N, prob = c(0.5,0.5), replace = TRUE )
-#' data$trt <- sample( c('Control','Experimental'), size = N, prob = c(0.4,0.6), replace = TRUE )
-#' 
-#' ## Compute desirable response proportion for all data with increasing
-#' ## desirable response (i.e. larger response value is better)
-#' desirable_response_proportion( data, list( desirable_response = 'increasing' ) )
-#' mean( data$y ) # Function return value should match this value
-#' 
-#' ## Compute desirable response proportion for Experimental treatment arm only
-#' ## with decreasing desirable response (i.e. smaller response value is better).
-#' desirable_response_proportion( data, list( trt_arm = 'Experimental',
-#'                                            desirable_response = 'decreasing' ) )
-#' @export
-desirable_response_proportion <- function( data,
-                                           scoring_function_parameters = NULL ){
+## #' @title desirable_response_proportion
+## #' @description Compute proportion of subjects that have a desirable (binary) response
+## #' @details This function will compute the proportion of subjects for which
+## #' the response indicates a desirable response. The response proportion can
+## #' be computed for a single treatment arm only (if valued for trt_arm and trt
+## #' are provided) or for all data passed to the function.
+## #' @seealso link{TSDT}, \link{binary_transform}
+## #' @param data data.frame containing response data
+## #' @param scoring_function_parameters named list of scoring function control parameters
+## #' @return Proportion of (binary) response values that have a desirable value.
+## #' The desirable value is 1 if desirable_response = 'increasing' and the
+## #' desirable value is 0 if desirable_response = 'decreasing'.
+## #' @examples
+## #' N <- 50
+## #' 
+## #' data <- data.frame( binary_response = numeric(N) )
+## #' 
+## #' data$binary_response <- sample( c(0,1), size = N, prob = c(0.3,0.7), replace = TRUE )
+## #' 
+## #' ## Compute desirable response proportion with increasing desirable response
+## #' ## (i.e. larger response value is better)
+## #' 
+## #' desirable_response_proportion( data, list( y_var = 'binary_response', desirable_response = 'increasing' ) )
+## #' mean( data$binary_response ) # Function return value should match this value
+## #'
+## #' 
+## #' ## Compute desirable response proportion for Experimental treatment arm only
+## #' ## with decreasing desirable response (i.e. smaller response value is better).
+## #'
+## #' data$trt <- sample( c('Control','Experimental'), size = N, prob = c(0.4,0.6), replace = TRUE )
+## #' 
+## #' desirable_response_proportion( data, list( y_var = 'binary_response', desirable_response = 'decreasing', trt_control = 'Control' ) )
+## #'
+## #' prop.table( table( subset( data, trt != 'Control', select = 'binary_response', drop = TRUE ) ) )
+## #' 
+## #' @export
+## desirable_response_proportion <- function( data,
+##                                            scoring_function_parameters = NULL ){
 
-  ## Create NULL placeholders to prevent NOTE in R CMD check
-  desirable_response <- NULL;rm( desirable_response )
-  trt_control <- NULL;rm( trt_control )
-  
-  if( !is.null( scoring_function_parameters ) )
-      unpack_args( scoring_function_parameters )
+##   if( !is.null( scoring_function_parameters ) )
+##       unpack_args( scoring_function_parameters )
 
-  if( is.null( desirable_response ) )
-      rm( desirable_response )
+##   response <- binary_transform( get_y( data, scoring_function_parameters ) )
+##   trt <- get_trt( data, scoring_function_parameters )
+  
+##   if( desirable_response %nin% c("increasing","decreasing") )
+##       stop( "ERROR: desirable_response must be in {increasing,decreasing}" )      
 
-  if( exists( "trt_control" ) && is.null( trt_control ) )
-      rm( trt_control )
+##   if( !is.null( trt ) && !exists( "trt_control" ) )
+##       stop( "ERROR: if a treatment variable is present in data a trt_control value must be provided in scoring_function_parameters" )
   
-  response <- binary_transform( get_y( data, scoring_function_parameters ) )
-  trt <- get_trt( data, scoring_function_parameters )
-  
-  N <- length( response )
-  
-  if( desirable_response %nin% c("increasing","decreasing") )
-      stop( "ERROR: desirable_response must be in {increasing,decreasing}" )      
-  
-  # For computing the proportion when no treatment variable is provided
-  if( !exists( "trt_var" ) ){
-    # Always count score as proportion of response values equal to 1.
-    # Do not adjust this definition for desirable_response. This will
-    # be handled by the superior_subgrous() function.
-    proportion <- length( subset( response, response == 1 ) )/N 
-  }
-  # For computing the proportion only on the treatment arm
-  else{
-    response <- subset( response, trt != trt_control )
+##   # For computing the proportion when no treatment variable is provided
+##   #if( !exists( "trt_var" ) ){
+##   if( is.null( trt ) ){
+##     # Always count score as proportion of response values equal to 1.
+##     # Do not adjust this definition for desirable_response. This will
+##     # be handled by the superior_subgrous() function.
 
-    if( desirable_response == "increasing" ){
-      response <- subset( response, response == 1 )
-    }else{ #decreasing
-      response <- subset( response, response == 0 )
-    }
-    proportion <- length( response )/N 
-  } 
-  return( proportion )
-}
+##     N <- length( response )
+    
+##     if( desirable_response == "increasing" ){
+##       proportion <- length( subset( response, response == 1 ) )/N
+##     }else{
+##       proportion <- length( subset( response, response == 0 ) )/N
+##     }
+##   }
+##   # For computing the proportion only on the treatment arm
+##   else{
+    
+##     response <- subset( response, trt != trt_control )
+##     N <- length( response )
+    
+##     if( desirable_response == "increasing" ){
+##       response <- subset( response, response == 1 )
+##     }else{ #decreasing
+##       response <- subset( response, response == 0 )
+##     }
+##     proportion <- length( response )/N 
+##   } 
+##   return( proportion )
+## }
 
 #################################################################################
 # Scoring functions for a survival outcome: difference in median (or other      #

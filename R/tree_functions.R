@@ -67,17 +67,33 @@ parents <- function( nodeid ){
 }
 
 
-
-superior_subgroups <- function( splits, mean_response, score, threshold, desirable_response = "increasing", eps = 1E-6 ){
+superior_subgroups <- function( splits,
+                                score,
+                                threshold,
+                                desirable_response = "increasing",
+                                mean_response = NULL,
+                                eps = 1E-6 ){
 
   if( desirable_response %nin% c("increasing","decreasing") )
-    stop( "ERROR: desirable_response must be in {decreasing, increasing}" )
+      stop( "ERROR: desirable_response must be in {decreasing, increasing}" )
+  
+  if( desirable_response == "increasing" ){
+    superior_subgroups__ <- subset( splits, score - eps > threshold )
+  }else{
+    superior_subgroups__ <- subset( splits, score + eps < threshold )
+  }
 
-  if( desirable_response == "increasing" )
-    return( subset( splits, mean_response > mean_response[1] & score - eps > threshold ) )
+  ## If the scoring_function is not in {desirable_response_proportion} then also
+  ## ensure the mean subgroup response is superior to the mean overall response
+  if( !is.null( mean_response ) ){
+    if( desirable_response == "increasing" ){
+      superior_subgroups__ <- subset( superior_subgroups__, mean_response > mean_response[1] )
+    }else{
+      superior_subgroups__ <- subset( superior_subgroups__, mean_response < mean_response[1]  )
+    } 
+  }
 
-  #else
-  return( subset( splits,  mean_response < mean_response[1] & score + eps < threshold ) )
+  return( superior_subgroups__ )
 }
 
 #' @title subgroup
