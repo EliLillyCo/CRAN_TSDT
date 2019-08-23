@@ -41,19 +41,15 @@ scoring_function_wrapper <- function( scoring_function_name, data, scoring_funct
 #'                    trt = character(N) )
 #' 
 #' data$continuous_response <- runif( min = 0, max = 20, n = N )
-#' data$trt <- sample( c('Control','Experimental'), size = N, prob = c(0.4,0.6),
-#'                     replace = TRUE )
+#' data$trt <- sample( c('Control','Experimental'), size = N, prob = c(0.4,0.6), replace = TRUE )
 #' 
 #' ## Compute mean response for all data
-#' mean_response( data )
+#' mean_response( data, scoring_function_parameters = list( y_var = 'continuous_response' ) )
 #' mean( data$continuous_response ) # Function return value should match this value
 #' 
 #' ## Compute mean response for Experimental treatment arm only
-#' mean_response( data,
-#'                scoring_function_parameters = list( trt_arm = 'Experimental' ) )
-#' 
-#' # Function return value should match this value
-#' mean( data$continuous_response[ data$trt == 'Experimental' ] )
+#' mean_response( data, scoring_function_parameters = list( y_var = 'continuous_response', trt_arm = 'Experimental' ) )
+#' mean( data$continuous_response[ data$trt == 'Experimental' ] ) # Function return value should match this value
 #' @export
 mean_response <- function( data,
                            scoring_function_parameters = NULL ){
@@ -359,11 +355,10 @@ treatment_effect <- function( data,
 #' @return A quantile of the response survival time.
 #' @examples
 #' N <- 200
-#' require( survival )
-#' df <- data.frame( y = survival::Surv( runif( min = 0, max = 20, n = N ),
-#'                             sample( c(0,1), size = N, prob = c(0.2,0.8), replace = TRUE ) ),
-#'                   trt = sample( c('Control','Experimental'), size = N,
-#'                                 prob = c(0.4,0.6), replace = TRUE ) )
+#' time <- runif( min = 0, max = 20, n = N )
+#' event <- sample( c(0,1), size = N, prob = c(0.2,0.8), replace = TRUE )
+#' df <- data.frame( y = survival::Surv( time, event ),
+#'                   trt = sample( c('Control','Experimental'), size = N, prob = c(0.4,0.6), replace = TRUE ) )
 #' 
 #' ## Compute median survival time in Experimental treatment arm.
 #' ex1 <- survival_time_quantile( data = df,
@@ -376,8 +371,7 @@ treatment_effect <- function( data,
 #' ## behavior is to use this variable as the treatment variable. To override
 #' ## the default behavior trt = NULL is included in scoring_function_parameters.
 #' ex2 <- survival_time_quantile( data = df,
-#'                                scoring_function_parameters = list( trt = NULL,
-#'                                                          percentile = 0.25 ) )
+#'                                scoring_function_parameters = list( trt = NULL, percentile = 0.25 ) )
 #' @export
 survival_time_quantile <- function( data,
                                     scoring_function_parameters = NULL ){ 
