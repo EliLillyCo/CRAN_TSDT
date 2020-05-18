@@ -313,6 +313,9 @@ Changes from Version 1.0.4 to 1.0.5 [23-Aug-2019]
 
 * Fix examples that are inconsistent with underlying code
 
+Changes from Version 1.0.5 to 1.0.6 [18-May-2020]
+	
+* Allow user to set depth of competitor trees
 
 
 

@@ -73,25 +73,31 @@ superior_subgroups <- function( splits,
                                 desirable_response = "increasing",
                                 mean_response = NULL,
                                 eps = 1E-6 ){
-
+  
   if( desirable_response %nin% c("increasing","decreasing") )
       stop( "ERROR: desirable_response must be in {decreasing, increasing}" )
+
+  superior_subgroups__ <- splits
+  superior_subgroups__[,"superior"] <- FALSE
   
   if( desirable_response == "increasing" ){
-    superior_subgroups__ <- subset( splits, score - eps > threshold )
+    superior_subgroups__[,"superior"] <- score - eps > threshold
   }else{
-    superior_subgroups__ <- subset( splits, score + eps < threshold )
+    superior_subgroups__[,"superior"] <- score + eps < threshold
   }
 
   ## If the scoring_function is not in {desirable_response_proportion} then also
   ## ensure the mean subgroup response is superior to the mean overall response
   if( !is.null( mean_response ) ){
     if( desirable_response == "increasing" ){
-      superior_subgroups__ <- subset( superior_subgroups__, mean_response > mean_response[1] )
+      superior_subgroups__[,"superior"] <- superior_subgroups__[,"superior"] & mean_response > mean_response[1]
     }else{
-      superior_subgroups__ <- subset( superior_subgroups__, mean_response < mean_response[1]  )
+      superior_subgroups__[,"superior"] <- superior_subgroups__[,"superior"] & mean_response < mean_response[1]
     } 
   }
+
+  superior_subgroups__ <- subset( superior_subgroups__, superior == TRUE )
+  superior_subgroups__ [,"superior"] <- NULL
 
   return( superior_subgroups__ )
 }
@@ -265,9 +271,9 @@ get_competitors <- function( splits,
   
   if( tree_builder %in% c("rpart") ){
     tree_builder_parameters$control$maxcompete <- 0 # trees for competitor splits do not need competitors themselves
-    tree_builder_parameters$control$maxdepth <- 1   # trees for competitor splits only need to be of depth 1 (only want competitor for root node split)
+    tree_builder_parameters$control$maxdepth <- tree_builder_parameters$competedepth
   }else if( tree_builder %in% c("ctree") ){
-    tree_builder_parameters$controls@tgctrl@maxdepth <- as.integer( 1L )
+    tree_builder_parameters$controls@tgctrl@maxdepth <- as.integer( tree_builder_parameters$competedepth )
   }
   
   COMPETITORS <- splits[0,] #empty data.frame with same columns as in splits
@@ -286,8 +292,8 @@ get_competitors <- function( splits,
     tree_builder_parameters$cost <- tree_builder_parameters$cost[INDICES_TO_KEEP]
     rm( INDICES_TO_KEEP )
 
-    tree_builder_parameters$maxdepth <- 1
-
+    tree_builder_parameters$maxdepth <- tree_builder_parameters$competedepth
+    
     competitor_tree__ <- tree( response = response,
                                response_type = response_type,
                                trt = trt,
@@ -300,15 +306,10 @@ get_competitors <- function( splits,
 
     if( NROW( competitor_splits__ ) > 1 ){
 
-      # Populate 2nd and 3rd rows of competitor split data.frame
-      competitor_splits__$SplitVariable <- competitor_splits__$SplitVariable[[1]]
-      competitor_splits__$SplitValue <- competitor_splits__$SplitValue[[1]]
-      
-      # Get left and right children of root node
-      competitor_splits__ <- competitor_splits__[competitor_splits__$NodeID %in% c(2,3),]
-      competitor_splits__$LeftChild <- NA
-      competitor_splits__$RightChild <- NA
-
+      competitor_splits__[,"NodeID"] <- -(competitor_splits__[,"NodeID"] + 100*(running_count_of_competitors+1))
+      competitor_splits__[,"Parent"] <- -(competitor_splits__[,"Parent"] + 100*(running_count_of_competitors+1))
+      competitor_splits__[,"LeftChild"] <- -(competitor_splits__[,"LeftChild"] + 100*(running_count_of_competitors+1))
+      competitor_splits__[,"RightChild"] <- -(competitor_splits__[,"RightChild"] + 100*(running_count_of_competitors+1))
       
       COMPETITORS <- rbind( COMPETITORS, competitor_splits__ )
       

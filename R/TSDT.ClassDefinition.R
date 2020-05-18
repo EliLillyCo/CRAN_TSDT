@@ -68,9 +68,6 @@ setClass( "TSDT",
                     }
                   }
                 }
-                
-                if( length( which( object@samples[[i]]@subgroups$NodeID < 0 ) ) > 2 * object@parameters$rootcompete )
-                    validity_string <- paste0( validity_string, "\nERROR: the number of competitor splits in sample ", i, " exceeds rootcompete" )
               }
               
               if( !is.null(validity_string) ){

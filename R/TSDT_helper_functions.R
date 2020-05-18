@@ -274,6 +274,8 @@ get_superior_subgroups <- function( splits,
   
   unpack_args( scoring_function_parameters )
 
+  splits <- subset( splits, NodeID==1 | nchar(trimws(Subgroup)) > 0 )
+  
   if( response_type != "survival" ){
     inbag_mean_response <- splits$Mean_Inbag_Response  
     oob_mean_response <- splits$Mean_OOB_Response
@@ -283,20 +285,15 @@ get_superior_subgroups <- function( splits,
     oob_mean_response <- splits$OOB_Score
   }
 
-  ## If the scoring_function is in {desirable_response_proportion} then it is 
-  ## not necessary to also confirm the mean subgroup response is superior to the
-  ## mean overall response
-  if( gsub( pattern = '"', replacement = '', fixed = TRUE, scoring_function_parameters$scoring_function_name )
-     %in% c("desirable_response_proportion") ){
-    inbag_mean_response <- NULL
-    oob_mean_response <- NULL
-  }
-  
+  inbag_mean_response__ <- subset( inbag_mean_response, splits[,"NodeID"]==1 | nchar(trimws(splits[,"Subgroup"])) > 0 )
+  oob_mean_response__ <- subset( oob_mean_response, splits[,"NodeID"]==1 | nchar(trimws(splits[,"Subgroup"])) > 0 )
+  splits__ <- subset( splits, splits[,"NodeID"]==1 | nchar(trimws(splits[,"Subgroup"])) > 0 )
+
   # Identify superior in-bag subgroups                              
-  inbag_superior_subgroup <- superior_subgroups( splits = splits,
-                                                 mean_response = inbag_mean_response,
-                                                 score = splits$Inbag_Score,
-                                                 threshold = splits$Inbag_Score[[1]] + abs(splits$Inbag_Score[[1]]) * inbag_score_margin,
+  inbag_superior_subgroup <- superior_subgroups( splits = splits__,
+                                                 mean_response = inbag_mean_response__,
+                                                 score = splits__$Inbag_Score,
+                                                 threshold = splits__$Inbag_Score[[1]] + abs(splits__$Inbag_Score[[1]]) * inbag_score_margin,
                                                  desirable_response = desirable_response,
                                                  eps = eps )
 
@@ -309,10 +306,10 @@ get_superior_subgroups <- function( splits,
       cat( "\nNOTE: If desirable_response == increasing then inbag_score_margin should be positive\n\n" )
   
   # Identify superior out-of-bag subgroups                              
-  oob_superior_subgroup <- superior_subgroups( splits = splits,
-                                               mean_response = oob_mean_response,
-                                               score = splits$OOB_Score,
-                                               threshold = splits$OOB_Score[[1]] + abs( splits$OOB_Score[[1]] ) * oob_score_margin,
+  oob_superior_subgroup <- superior_subgroups( splits = splits__,
+                                               mean_response = oob_mean_response__,
+                                               score = splits__$OOB_Score,
+                                               threshold = splits__$OOB_Score[[1]] + abs( splits__$OOB_Score[[1]] ) * oob_score_margin,
                                                desirable_response = desirable_response,
                                                eps = eps )
   
@@ -565,10 +562,9 @@ populate_tsdt_samples <- function( samples,
       
       # Give competitor splits negative NodeIDs
       if( NROW(competitors__) > 0 ){
-        competitors__$NodeID <- -1:(-NROW(competitors__))
-        
         splits__ <- rbind( splits__, competitors__ )
-      }   
+      }
+      
     }
     
     # Rename MeanResponse to Mean_Inbag_Response

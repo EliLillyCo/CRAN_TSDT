@@ -179,6 +179,7 @@
 #' number of Experimental  observations in the overall sample.
 #' @param maxdepth Maximum depth of trees.
 #' @param rootcompete Number of competitor splits to retain for root node split.
+#' @param competedepth Depth of competitor split trees (defaults to 1)
 #' @param strength_cutpoints Cutpoints for permuted p-values to classify a
 #' subgroup as Strong, Moderate, Weak, or Not Confirmed. The default cutpoints are
 #' 0.10, 0.20, and 0.30 for Strong, Moderate, and Weak subgroups, respectively. (optional)
@@ -272,11 +273,12 @@ TSDT <- function( response = NULL,
                   min_subgroup_n_oob_trt = NULL,
                   maxdepth = .Machine$integer.max,
                   rootcompete = 0,
+                  competedepth = 1,
                   strength_cutpoints = c(0.10,0.20,0.30),
                   n_permutations = 0,
                   n_cpu = 1,
                   trace = FALSE ){
-  
+
   ## Create NULL placeholders to prevent NOTE in R CMD check
   scoring_function_name <- NULL
   PID0 <- NULL
@@ -590,6 +592,7 @@ TSDT <- function( response = NULL,
     
   tree_builder_parameters$maxdepth <- maxdepth
   tree_builder_parameters$rootcompete <- rootcompete
+  tree_builder_parameters$competedepth <- competedepth
   
   # Set parameters specific to each tree-building algorithm
   if( tree_builder == "rpart" ){
@@ -831,6 +834,8 @@ TSDT <- function( response = NULL,
   for( i in 1:length( TSDT_SAMPLES ) ){
 
     tree__ <- TSDT_SAMPLES[[i]]@subgroups
+    tree__ <- subset( tree__, nchar(trimws(Subgroup)) > 0 )
+    
 
     if( NROW( tree__ ) > 1 ){
     
@@ -861,7 +866,6 @@ TSDT <- function( response = NULL,
           oob_treatment_subgroup__ <- subset( oob_subgroup__, trt != trt_control )
         }
         
-
         # Get generic version of subgroup definition
         generic_subgroup__ <- get_generic_subgroup( tree__$Subgroup[[j]] )
 
@@ -1472,6 +1476,7 @@ TSDT <- function( response = NULL,
                                    min_subgroup_n_oob_trt = min_subgroup_n_oob_trt,
                                    maxdepth = maxdepth,
                                    rootcompete = rootcompete,
+                                   competedepth = competedepth,
                                    trt_control = trt_control,
                                    permute_method = as.character( substitute( permute_method ) ),
                                    permute_arm = as.character( substitute( permute_arm ) ),
