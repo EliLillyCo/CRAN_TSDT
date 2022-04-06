@@ -48,8 +48,10 @@ scoring_function_wrapper <- function( scoring_function_name, data, scoring_funct
 #' mean( data$continuous_response ) # Function return value should match this value
 #' 
 #' ## Compute mean response for Experimental treatment arm only
-#' mean_response( data, scoring_function_parameters = list( y_var = 'continuous_response', trt_arm = 'Experimental' ) )
-#' mean( data$continuous_response[ data$trt == 'Experimental' ] ) # Function return value should match this value
+#' scoring_function_parameters <- list( y_var = 'continuous_response', trt_arm = 'Experimental' )
+#' mean_response( data, scoring_function_parameters = scoring_function_parameters )
+#' # Function return value should match this value
+#' mean( data$continuous_response[ data$trt == 'Experimental' ] )
 #' @export
 mean_response <- function( data,
                            scoring_function_parameters = NULL ){
@@ -357,8 +359,8 @@ treatment_effect <- function( data,
 #' N <- 200
 #' time <- runif( min = 0, max = 20, n = N )
 #' event <- sample( c(0,1), size = N, prob = c(0.2,0.8), replace = TRUE )
-#' df <- data.frame( y = survival::Surv( time, event ),
-#'                   trt = sample( c('Control','Experimental'), size = N, prob = c(0.4,0.6), replace = TRUE ) )
+#' trt <- sample( c('Control','Experimental'), size = N, prob = c(0.4,0.6), replace = TRUE )
+#' df <- data.frame( y = survival::Surv( time, event ), trt = trt )
 #' 
 #' ## Compute median survival time in Experimental treatment arm.
 #' ex1 <- survival_time_quantile( data = df,

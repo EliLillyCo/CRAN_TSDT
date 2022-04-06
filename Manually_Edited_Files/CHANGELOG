@@ -317,6 +317,9 @@ Changes from Version 1.0.5 to 1.0.6 [18-May-2020]
 	
 * Allow user to set depth of competitor trees
 
+Changes from Version 1.0.6 to 1.0.7 [06-Apr-2022]
 
-
-
+* Update examples to fix errors in R CMD check. This involved enclosing
+  examples intended to demonstrate errors in \dontrun{...}.
+	
+* Fix unfactor() function.  Should use single "&" inside any() function.	

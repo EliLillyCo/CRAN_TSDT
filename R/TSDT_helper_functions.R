@@ -271,6 +271,9 @@ get_superior_subgroups <- function( splits,
                                     eps,
                                     scoring_function_parameters = NULL ){
   
+
+  ## Avoid NOTE in R CMD check about no visible binding for global variable
+  NodeID <- Subgroup <- response_type <- NULL
   
   unpack_args( scoring_function_parameters )
 

@@ -26,6 +26,7 @@
 #' @examples
 #' ## Convert a variable that takes values 'A' and 'B' to 0 and 1
 #' x <- sample( c('A','B'), size = 10, prob = c(0.5,0.5), replace = TRUE )
+#' print(x);flush.console()
 #' binary_transform( x )
 #' @export
 binary_transform <- function( x ){
@@ -620,14 +621,20 @@ unfactor <- function( data ){
 
       char_var <- as.character( data[,j] )
       num_var <- suppressWarnings( as.numeric( char_var ) )
-      
-      if( all( is.na( num_var ) ) || ( any( is.na( num_var ) && !is.na( char_var ) ) ) ){
-        data[,j] <- as.character( data[,j] )
+
+      ## A factor should be converted to a character if any of the following
+      ## conditions are true:
+      ## 1. all elements are missing when converted to numeric
+      ## 2. any element is non-missing when converted to character, but missing
+      ##    when converted to numeric
+      if( all( is.na( num_var ) ) || ( any( is.na( num_var ) & !is.na( char_var ) ) ) ){
+        
+        data[,j] <- char_var
         if( data_is_factor )# not a data.frame
             data <- as.character( data[,1] )
       }
       else{
-        data[,j] <- as.numeric( char_var )
+        data[,j] <- num_var
         if( data_is_factor )# not a data.frame
             data <- as.numeric( data[,1] )
       }

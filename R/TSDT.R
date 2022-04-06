@@ -279,9 +279,8 @@ TSDT <- function( response = NULL,
                   n_cpu = 1,
                   trace = FALSE ){
 
-  ## Create NULL placeholders to prevent NOTE in R CMD check
-  scoring_function_name <- NULL
-  PID0 <- NULL
+  ## Avoid NOTE in R CMD check about no visible binding for global variable
+  PID0 <- scoring_function_name <- Subgroup <- NULL
   
   if( tree_builder %nin% c('rpart','ctree','mob') )
       stop( 'ERROR: tree_builder must be one of {rpart,ctree,mob}' )

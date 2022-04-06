@@ -73,6 +73,9 @@ superior_subgroups <- function( splits,
                                 desirable_response = "increasing",
                                 mean_response = NULL,
                                 eps = 1E-6 ){
+
+  ## Avoid NOTE in R CMD check about no visible binding for global variable
+  superior <- NULL
   
   if( desirable_response %nin% c("increasing","decreasing") )
       stop( "ERROR: desirable_response must be in {decreasing, increasing}" )
