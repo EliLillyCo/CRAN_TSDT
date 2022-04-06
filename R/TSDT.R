@@ -358,13 +358,13 @@ TSDT <- function( response = NULL,
   # Populate response_type if none provided
   if( is.null( response_type ) ){
     
-    if( class( response ) == "Surv" )
+    if( is( response, "Surv" ) )
         response_type <- "survival"
     
-    else if( class( response ) %in% c("character","factor" ) && is.binary( response ) )
+    else if( ( is(response, "character") || is( response, "factor" ) ) && is.binary( response ) )
         response_type <- "binary"
     
-    else if( class( response ) == "numeric" )
+    else if( is( response, "numeric" ) )
         response_type <- "continuous"
     
     else
@@ -451,11 +451,11 @@ TSDT <- function( response = NULL,
 
   ## Reset factor levels
   covariates <- droplevels( covariates )
-  if( class( response ) == 'factor' ){
+  if( is( response, 'factor' ) ){
     response <- droplevels( response )
   }
 
-  if( !is.null( trt ) && class( trt ) == 'factor' ){
+  if( !is.null( trt ) && is( trt, 'factor' ) ){
     trt <- droplevels( trt )
   }
   
@@ -658,7 +658,7 @@ TSDT <- function( response = NULL,
   ###############################################################################
 
   for( j in 1:NCOL( source_data ) ){
-    if( class( source_data[,j]  ) == 'character' ){
+    if( is( source_data[,j], 'character') ){
       source_data[,j] <- gsub( pattern = '>=', replacement = '%%__GE__%%', fixed = TRUE, source_data[,j] )
       source_data[,j] <- gsub( pattern = '<=', replacement = '%%__LE__%%', fixed = TRUE, source_data[,j] )
       source_data[,j] <- gsub( pattern = '>',  replacement = '%%__GT__%%', fixed = TRUE, source_data[,j] )
@@ -1378,7 +1378,7 @@ TSDT <- function( response = NULL,
       
       ## Convert %%__GE__%% back to >=
       for( j in 1:NCOL( TSDT_SAMPLES[[s]]@inbag ) ){
-        if( class( TSDT_SAMPLES[[s]]@inbag[,j] ) == 'character' ){
+        if( is( TSDT_SAMPLES[[s]]@inbag[,j], 'character' ) ){
           TSDT_SAMPLES[[s]]@inbag[,j] <- gsub( pattern = pattern,
                                                replacement = replacement,
                                                fixed = TRUE,
@@ -1388,7 +1388,7 @@ TSDT <- function( response = NULL,
       rm( j )
       
       for( j in 1:NCOL( TSDT_SAMPLES[[s]]@oob ) ){
-        if( class( TSDT_SAMPLES[[s]]@oob[,j] ) == 'character' ){
+        if( is( TSDT_SAMPLES[[s]]@oob[,j], 'character' ) ){
           TSDT_SAMPLES[[s]]@oob[,j] <- gsub( pattern = pattern,
                                              replacement = replacement,
                                              fixed = TRUE,
@@ -1398,7 +1398,7 @@ TSDT <- function( response = NULL,
       rm( j )
       
       for( j in 1:NCOL( TSDT_SAMPLES[[s]]@subgroups ) ){
-        if( class( TSDT_SAMPLES[[s]]@subgroups[,j] ) == 'character' ){
+        if( is( TSDT_SAMPLES[[s]]@subgroups[,j], 'character' ) ){
           TSDT_SAMPLES[[s]]@subgroups[,j] <- gsub( pattern = pattern,
                                                    replacement = replacement,
                                                    fixed = TRUE,

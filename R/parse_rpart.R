@@ -262,7 +262,7 @@ rpart_wrapper <- function( response,
   
   if( is.null( response_type ) ){
       
-      if( class( response ) == "Surv")
+      if( is( response, "Surv") )
           response_type <- "survival"
       if( is.numeric( response ) )
           response_type <- "continuous"

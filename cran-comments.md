@@ -9,6 +9,9 @@ This is a resubmission. In this version I have:
 
 * Updated examples to conform to maximum allowable line length
 
+* Use is() function from methods library to test class of data objects
+  rather than comparing to a string.
+
 ## R CMD check results
 
 There were no ERRORs or WARNINGs. 

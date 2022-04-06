@@ -452,7 +452,7 @@ survival_time_quantile <- function( data,
     
     if( class( quantile__ ) != "logical" ){
       
-      if( class( quantile__ ) == "numeric" ){
+      if( is( quantile__, "numeric" ) ){
         survival_time_quantile <- quantile__
       }else{
         survival_time_quantile <- quantile__$quantile[[1]]
@@ -562,7 +562,7 @@ diff_survival_time_quantile <- function( data,
 #' Therneau, T.M.,  Grambsch, P.M., and Fleming, T.R. (1990).  Martingale-based
 #' residuals for survival models.  Biometrika, 77(1), 147-160.
 #' doi:10.1093/biomet/77.1.147.
-#' \url{http://biomet.oxfordjournals.org/content/77/1/147}
+#' \url{https://academic.oup.com/biomet/article/77/1/147/271076}
 #' @export
 mean_deviance_residuals <- function( data,
                                      scoring_function_parameters = NULL ){

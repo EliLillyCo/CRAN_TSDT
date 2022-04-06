@@ -1298,7 +1298,7 @@ equal <- function( x, y, verbose = FALSE ){
     rownames( ydistribution ) <- NULL
 
     # If distribution extracts to a matrix
-    if( class( xdistribution_unlist ) == "matrix" ){
+    if( is( xdistribution_unlist, "matrix" ) ){
 
       if( length( setdiff( names( xdistribution ), names( ydistribution ) ) ) != 0 ){
         if( verbose )
@@ -1318,7 +1318,7 @@ equal <- function( x, y, verbose = FALSE ){
       rm( d )
     }
     # If distribution extracts to a vector
-    if( class( xdistribution_unlist ) == "numeric" ){
+    if( is( xdistribution_unlist,"numeric" ) ){
       
       names(xdistribution) <- 'x'
       xdistribution$distributions <- names( xdistribution_unlist )

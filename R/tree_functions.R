@@ -239,11 +239,11 @@ parse_tree <- function( tree, tree_builder = NULL ){
   
   if( is.null( tree_builder ) ){
     
-    if( class( tree ) == "rpart" ){
+    if( is( tree, "rpart" ) ){
       tree_builder <- "rpart"
-    }else if( class( tree ) == "BinaryTree" ){
+    }else if( is( tree, "BinaryTree" ) ){
       tree_builder <- "ctree"
-    }else if( class( tree ) == "mob" ){
+    }else if( is( tree, "mob" ) ){
       tree_builder <- "mob"
     }
     

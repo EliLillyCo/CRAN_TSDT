@@ -40,7 +40,7 @@ export(unfactor)
 export(unpack_args)
 exportMethods(summary)
 
-importFrom("methods", "new", "validObject")
+importFrom("methods", "new", "validObject","is")
 importFrom("stats", "as.formula", "coef", "median", "na.omit",
            "predict", "quantile", "residuals", "weighted.mean")
 importFrom("utils", "capture.output", "flush.console", "str", "globalVariables")
