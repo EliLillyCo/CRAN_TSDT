@@ -326,3 +326,10 @@ Changes from Version 1.0.6 to 1.0.7 [06-Apr-2022]
 	
 * Use is() function from methods library to test class of data objects
   rather than comparing to a string.
+	
+Changes from Version 1.0.7 to 1.0.8 [07-Jan-2025]
+
+* Escape curly braces in documentation to pass CRAN checks.
+	
+* Changed default maxdepth of trees from .Machine$integer.max to 30 to
+  satisfy CRAN checks.
